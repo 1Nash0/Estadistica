@@ -9,6 +9,7 @@ library(summarytools)
 library(GGally)
 library(knitr)
 library(ggcorrplot)
+# library(corrplot)
 library(htmltools)
 
 lab <- read_csv("~/ESTADISTICA/Practica Grupal/AnalisisAIRBNB/Airbnb_Data.csv")
