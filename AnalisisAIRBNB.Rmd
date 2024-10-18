@@ -1,5 +1,5 @@
 ---
-title: "AnalisisAIRBNB"
+title: "Análisis AIRBNB"
 author: "Grupo 12"
 date: "2024-10-06"
 output: html_document
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ## Introducción y definición de objetivos
 
-Durante estos últimos años, plataformas donde de reservan propiedades durante un tiempo determinado, como es Airbnb, ha ido subiendo su popularidad y mucha gente opta por este tipo de servicio. Es por ello que un análisis de este modelo de negocio es interesante tanto para los clientes como para la empresa propietaria de Airbnb. Por ello, el objetivo de esta investigación es observar como afecta el precio a las distintas variables.
+Durante estos últimos años, plataformas donde se reservan propiedades durante un tiempo determinado, como es Airbnb, ha ido subiendo su popularidad y mucha gente opta por este tipo de servicio. Es por ello que un análisis de este modelo de negocio es interesante tanto para los clientes como para la empresa propietaria de Airbnb. Por ello, el objetivo de esta investigación es observar como afecta el precio a las distintas variables.
 
 Hemos descartado algunas variables dentro de esta base de datos. La primera es la variable bed_type, la cual descartamos ya que, tras hacer análisis previos, realmente no llevaría a cabo ningún cambio debido a que la gran mayoria son del mismo tipo (real bed). Las siguientes variables que hemos descartado son la de "latitud", "longitud" y "zipcode", ya que tienen que ver con la localización de la propiedad y eso ya se refleja con las variables "city" y "neighbourhood". Otra variable descartada es "amenities" ya que aparecerían muchas más variables que complejizarían el análisis y no aportaria a los objetivos propuestos. Con la variable "accomodates", la cual se refiere al número de personas que se permite en la propiedad, se descartó ya que no influiría en un cambio significativo en las dems variables, como por ejemplo la del precio, ya que sean las personas que sean el precio por habitación será el mismo. Además que con la información del número de camas se puede aproximar. La variable "host_response_rate" (la tasa de respuesta del anfitrión) la descartamos ya que en muchos de los casos no hay información. Las variables como "first review" (fecha en que se realizó la primera valoración), "last review" (fecha en que se realizó la última valoración), "description" (la descripcion), "host_has_profile_pic" (si el anfitrión tiene foto de perfil en Airbnb), "host_since" (fecha cuando se publicó por primera vez la propiedad), "name" (nombre de la propiedad) o "thumbnail_url" (URL de la página de la habitación) las hemos descartado porque no son relevantes para nuestro análisis o directamente no se pueden analizar.
 
@@ -33,14 +33,14 @@ library(ggcorrplot)
 library(corrplot)
 library(htmltools)
 
-Airbnb_Data <- read.csv("~/ESTADISTICA/Practica Grupal/AnalisisAIRBNB/Airbnb_Data.csv")
+Airbnb_Data <- read_csv("Airbnb_Data.csv")
 ```
 
 ## Diccionario de datos
 
 -   `price` : Precio de la reserva de AIRBNB
 
-    -   Tipo: Numérica discreta
+    -   Tipo: Numérica continua
 
 -   `property_type`: Tipo de propiedad que se reserva
 
@@ -120,8 +120,6 @@ CONTAR EL NÚMERO DE RESPUESTAS
 num_respuestas_PRICE <- length(unique(Airbnb_Data$log_price))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_PRICE)
 ```
-
-Como podemos observar, no tiene sentido realizar un estudio de esta variable continua.
 
 HISTOGRAMA DE PRECIOS
 
@@ -267,7 +265,7 @@ tabla_frecuencias_bathrooms <- Airbnb_Data |>
  print(tabla_frecuencias_ordenada4) 
 ```
 
-HISTOGRAMA SEGUN NUMERO DE BAÑOS
+HISTOGRAMA SEGÚN NÚMERO DE BAÑOS
 
 ```{r}
 datos <- Airbnb_Data$bathrooms
@@ -443,10 +441,7 @@ Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) 
 GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-table(Airbnb_Data$host_identity_verified)
-Airbnb_Data |> 
-  ggplot(aes(Airbnb_Data$host_identity_verified)) +
-  geom_bar(fill = "#CB0019") 
+Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable instant_bookable
@@ -458,7 +453,7 @@ num_respuestas_instant_bookable <- length(unique(Airbnb_Data$instant_bookable))
 cat("El número de respuestas obtenido es: ", num_respuestas_instant_bookable)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 ```{r}
 tabla_frec_instant_bookable <- Airbnb_Data |> count(Airbnb_Data$instant_bookable) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -477,10 +472,7 @@ Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mut
 GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-table(Airbnb_Data$instant_bookable)
-Airbnb_Data |> 
-  ggplot(aes(Airbnb_Data$instant_bookable)) +
-  geom_bar(fill = "#CB0019") 
+Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de instant_bookable", x = "Reserva instantánea", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable neighbourhood
@@ -492,30 +484,49 @@ num_respuestas_neighbourhood <- length(unique(Airbnb_Data$neighbourhood))
 cat("El número de respuestas obtenido es: ", num_respuestas_neighbourhood)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 ```{r}
+tabla_frec_neighbourhood <- Airbnb_Data |> count(Airbnb_Data$neighbourhood) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
+tabla_frec_ord_1 <- tabla_frec_neighbourhood |> arrange(desc(n)) 
+tabla_frec_ord_1$N <- cumsum(tabla_frec_ord_8$n)
+tabla_frec_ord_1$F <- cumsum(tabla_frec_ord_8$f) 
+print(tabla_frec_neighbourhood)
 ```
 
 GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
+GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+
+```{r}
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Después de ver la tabla de frecuencias y el histograma, decidimos que al haber tantos valores no merece la pena estudiarlos de manera univariante ya que no se puede apreciar correctamente.
 
 #### Estudio de la variable number_of_reviews
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
-```{r}
+```{r NumRespuestasnumber_of_reviews, echo=TRUE}
 num_respuestas_number_of_reviews <- length(unique(Airbnb_Data$number_of_reviews))
-cat("El número de respuestas obtenido es: ", num_respuestas_number_of_reviews)
+cat("La cantidad de respuestas obtenidas es:", num_respuestas_number_of_reviews)
 ```
 
-```{r}
+HISTOGRAMA DE NÚMERO DE REVIEWS
 
+```{r Histonumber_of_reviews}
+hist(Airbnb_Data$number_of_reviews, col = "#CB0019", main = "Histograma de Número de Reviews", xlab = "number_of_reviews", ylab = "Frecuencia", border = "black")
+```
+
+RESUMEN DE PRECIOS
+
+```{r Resumennumber_of_reviews}
+Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
 ```
 
 #### Estudio de la variable review_scores_rating
@@ -530,35 +541,20 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rati
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
 ```{r}
-tabla_frecuencias_beds <- Airbnb_Data |>
-     count(review_scores_rating) |>
-     mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
- tabla_frecuencias_ordenada4 <- tabla_frecuencias_beds |> 
-     arrange(desc(n))
- tabla_frecuencias_ordenada4$F <- cumsum(tabla_frecuencias_ordenada4$f)
- tabla_frecuencias_ordenada4$N <- cumsum(tabla_frecuencias_ordenada4$n)
- print(tabla_frecuencias_ordenada4)
+
 ```
 
 GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
-Airbnb_Data  |> group_by(review_scores_rating) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), review_scores_rating = reorder(review_scores_rating, -Frequency)) |> ggplot(aes(x = review_scores_rating, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de reseñas", x = "Valoraciones", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
 
 ```
 
 GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
- datos <- Airbnb_Data$review_scores_rating 
- ggplot(data.frame(x = datos), aes(x = x)) +
-     geom_histogram(binwidth = 1, fill = "skyblue", color = "black", 
-                    aes(y = ..density..), alpha = 0.6) +
-     stat_function(fun = dnorm, args = list(mean = mean(datos), 
-                                            sd = sd(datos)), color = "#CB0019", size = 1.5) +
-     labs(title = "Distribución del Número de Habitaciones",
-          x = "Número de Habitaciones",
-          y = "Frecuencia")
+
 ```
 
 #### Estudio de la variable bedrooms
