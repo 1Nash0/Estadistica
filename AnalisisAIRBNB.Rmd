@@ -468,7 +468,7 @@ Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "red") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Como podemos observar hay tantos barrios que el análisis es ilegibles
