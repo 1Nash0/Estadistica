@@ -299,9 +299,11 @@ num_respuestas_bed_type <- length(unique(Airbnb_Data$bed_type))
 cat("El número de respuestas obtenido es: ", num_respuestas_bed_type)
 ```
 
-Aquí estudiaremos cuales son los tipos de habitaciones que más se ofertan.
+Aquí estudiaremos cuales son los tipos de camas que más se ofertan.
 
-TABLA DE FRECUENCIAS
+FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Primero estudiaremos las frecuencias relativas y absolutas.
 
 ```{r}
 tabla_frec_bed_type <- Airbnb_Data |> count(bed_type) |> mutate (f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -313,16 +315,22 @@ print(tabla_frec_ord_5)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Para poder observar los datos en función de frecuencia relativa con mayor claridad realizaremos una gráfica.
+
 ```{r}
 Airbnb_Data  |> group_by(bed_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), bed_type = reorder(bed_type, -Frequency)) |> ggplot(aes(x = bed_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de bed_type", x = "Tipo de cama", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+De la misma forma realizaremos un gráfico con las frecuencias absolutas.
+
 ```{r}
 Airbnb_Data  |> group_by(bed_type) |>  summarise(Frequency = n()) |> mutate(bed_type = reorder(bed_type, -Frequency)) |> ggplot(aes(x = bed_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de bed_type", x = "Tipo de cama", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+
+Como podemos observar en los gráficos casi el 100% de las camas son camas normales, y muy pocas son las ofertas que tiene algún otro tipo de cama.
 
 #### Estudio de la variable cancellation_policy
 
@@ -333,7 +341,11 @@ num_respuestas_cancellation_policy <- length(unique(Airbnb_Data$cancellation_pol
 cat("El número de respuestas es: ", num_respuestas_cancellation_policy)
 ```
 
+Aquí vamos a estudiar cuales son las políticas de cancelación más presentes en la plataforma.
+
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Primero estudiaremos las frecuencias relativas y absolutas.
 
 ```{r}
 tabla_frec_cancellation_policy <- Airbnb_Data |> count(cancellation_policy) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -345,15 +357,21 @@ print(tabla_frec_cancellation_policy)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Para ello vamos a realizar un gráfico para poder entender mejor los datos en función de frecuencia relativa.
+
 ```{r}
 Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cancellation_policy", x = "Política de cancelación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+De la misma forma vamos a realizar un gráfico con las frecuencias absolutas de las políticas de cancelación.
+
 ```{r}
 Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de cancellation_policy", x = "Política de cancelación", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+Estos gráficos nos muestran que la mayoría de los ofertantes son estrictos en cuanto a su política de cancelación, con alrededor del 44% del total de datos, de cerca les siguen los ofertantes con una política flexible y moderada con un 30% y 26% respectivamente, y con mucha diferencia se encuentran el resto de políticas.
 
 #### Estudio de la variable cleaning_fee
 
