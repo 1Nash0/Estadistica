@@ -123,8 +123,15 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_PRICE)
 
 HISTOGRAMA DE PRECIOS
 
-```{r HistoPrice}
-hist(Airbnb_Data$log_price, col = "#CB0019", main = "Histograma de Precio", xlab = "Price", ylab = "Frecuencia", border = "black")
+```{r}
+Airbnb_Data |> ggplot(aes(log_price)) +
+  geom_histogram(
+    fill = "steelblue",  
+    bins = 10,           
+    col = "white"       
+  ) +
+
+  theme_bw()
 ```
 
 RESUMEN DE PRECIOS
@@ -144,7 +151,7 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_TYPE)
 
 Como podemos observar, aquí si tiene sentido realizar un estudio para poder ver que tipo de casa es la que más se oferta
 
-TABLA DE FRECUENCIAS
+FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
 ```{r}
 tabla_frecuencias_type <- Airbnb_Data |>
@@ -161,7 +168,7 @@ tabla_frecuencias_ordenada3$N <- cumsum(tabla_frecuencias_ordenada3$n)
 print(tabla_frecuencias_ordenada3)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA DE PROPERTY_TYPE
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE PROPERTY_TYPE
 
 ```{r}
 Airbnb_Data |> group_by(property_type) |> summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), property_type = reorder(property_type, -Frequency)) |> ggplot(aes(x = property_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de property_type", x = "Tipo de casa", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -169,7 +176,7 @@ Airbnb_Data |> group_by(property_type) |> summarise(Frequency = n()) |> mutate(F
 
 Esta gráfica nos permite ver con claridad cuáles son los tipos de propiedad que más se ofertan en Airbnb, como podemos observar la mayor parte de las ofertas son de apartamentos con el 66,1% del total, seguido de las casas particulares con un 22,3% y ya con mucha diferencia están los condiminios con un 3,59% del total y el resto de tipos de propiedades que suman entre sí un 5,7%.
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE PROPERTY_TYPE
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE PROPERTY_TYPE
 
 ```{r}
 Airbnb_Data |>
@@ -188,7 +195,7 @@ Airbnb_Data |>
 
 #### Estudio de la variable room_type
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_TYPE <- length(unique(Airbnb_Data$room_type))
@@ -208,43 +215,21 @@ tabla_frecuencias_type <- Airbnb_Data |>
  print(tabla_frecuencias_ordenada3)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA DE ROOM_TYPE
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE ROOM_TYPE
 
 ```{r}
-Airbnb_Data |>
-     group_by(room_type) |>
-     summarise(Frequency = n()) |>
-     mutate(room_type = reorder(room_type, -Frequency)) |>
-     ggplot(aes(x = room_type, y = Frequency)) +
-     geom_bar(stat = "identity", aes(fill = Frequency)) +
-     theme_bw() +
-     labs(title = "Gráfico de barras con frecuencia absoluta de room_type",
-          x = "Tipo de habitación",
-          y = "Frecuencia absoluta") +
-     scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") +
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de room_type", x = "Tipo de habitación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE ROOM_TYPE
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE ROOM_TYPE
 
 ```{r}
-Airbnb_Data |>
-     group_by(room_type) |>
-     summarise(Frequency = n()) |>
-     mutate(room_type = reorder(room_type, -Frequency)) |>
-     ggplot(aes(x = room_type, y = Frequency)) +
-     geom_bar(stat = "identity", aes(fill = Frequency)) +
-     theme_bw() +
-     labs(title = "Gráfico de barras con frecuencia absoluta de room_type",
-          x = "Tipo de habitación",
-          y = "Frecuencia absoluta") +
-     scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") +
-     theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de room_type", x = "Tipo de habitación", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable bathrooms
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_Bathrooms <- length(unique(Airbnb_Data$bathrooms))
@@ -278,7 +263,7 @@ ggplot(data.frame(x = datos), aes(x = x)) +
          y = "Frecuencia") 
 ```
 
-ANÁLISIS NÚMERICO
+ANÁLISIS NUMÉRICO
 
 ```{r}
 Airbnb_Data |> select(bathrooms) |> descr() |> kable(digits = 2)
@@ -286,7 +271,7 @@ Airbnb_Data |> select(bathrooms) |> descr() |> kable(digits = 2)
 
 #### Estudio de la variable bed_type
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_bed_type <- length(unique(Airbnb_Data$bed_type))
@@ -303,22 +288,22 @@ tabla_frec_ord_5$F <- cumsum(tabla_frec_ord_5$f)
 print(tabla_frec_ord_5)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(bed_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), bed_type = reorder(bed_type, -Frequency)) |> ggplot(aes(x = bed_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de bed_type", x = "Tipo de cama", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "red") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(bed_type) |>  summarise(Frequency = n()) |> mutate(bed_type = reorder(bed_type, -Frequency)) |> ggplot(aes(x = bed_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de bed_type", x = "Tipo de cama", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(bed_type) |>  summarise(Frequency = n()) |> mutate(bed_type = reorder(bed_type, -Frequency)) |> ggplot(aes(x = bed_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de bed_type", x = "Tipo de cama", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
 
 #### Estudio de la variable cancellation_policy
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_cancellation_policy <- length(unique(Airbnb_Data$cancellation_policy)) 
@@ -335,21 +320,21 @@ tabla_frec_ord_6$F <- cumsum(tabla_frec_ord_6$f)
 print(tabla_frec_cancellation_policy)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
-Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cancellation_policy", x = "Cancelación de póliza", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cancellation_policy", x = "Política de cancelación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cancellation_policy", x = "Cancelación de póliza", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(cancellation_policy) |>  summarise(Frequency = n()) |> mutate(cancellation_policy = reorder(cancellation_policy, -Frequency)) |> ggplot(aes(x = cancellation_policy, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de cancellation_policy", x = "Política de cancelación", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable cleaning_fee
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_cleaning_fee <- length(unique(Airbnb_Data$cleaning_fee))
@@ -366,25 +351,21 @@ tabla_frec_ord_7$F <- cumsum(tabla_frec_ord_7$f)
 print(tabla_frec_cleaning_fee)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(cleaning_fee) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), cleaning_fee = reorder(cleaning_fee, -Frequency)) |> ggplot(aes(x = cleaning_fee, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cleaning_fee", x = "Impuesto de Limpieza", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(cleaning_fee) |>  summarise(Frequency = n()) |> mutate(cleaning_fee = reorder(cleaning_fee, -Frequency)) |> ggplot(aes(x = cleaning_fee, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cleaning_fee", x = "Impuesto de Liempieza", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(cleaning_fee) |>  summarise(Frequency = n()) |> mutate(cleaning_fee = reorder(cleaning_fee, -Frequency)) |> ggplot(aes(x = cleaning_fee, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de cleaning_fee", x = "Impuesto de Limpieza", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable city
 
-CONTAR EL NUMERO DE RESPUESTAS
-
-num_respuestas_city \<- length(unique(Airbnb_Data\$city))
-
-cat("El número de respuestas obtenido es: ", num_respuestas_city)
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_city <- length(unique(Airbnb_Data$city))
@@ -398,16 +379,16 @@ tabla_frec_city <- Airbnb_Data |> count(city) |> mutate(f = n/nrow(Airbnb_Data),
 tabla_frec_ord_8 <- tabla_frec_city |> arrange(desc(n)) 
 tabla_frec_ord_8$N <- cumsum(tabla_frec_ord_8$n)
 tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f) 
-print(tabla_frec_cleaning_fee)
+print(tabla_frec_city)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudad", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -415,7 +396,7 @@ Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = r
 
 #### Estudio de la variable host_identity_verified
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_host_identity_verified <- length(unique(Airbnb_Data$host_identity_verified))
@@ -432,13 +413,13 @@ tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f)
 print(tabla_frec_host_identity_verified)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "¿Está verificado?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
 Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -446,7 +427,7 @@ Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) 
 
 #### Estudio de la variable instant_bookable
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_instant_bookable <- length(unique(Airbnb_Data$instant_bookable))
@@ -463,21 +444,21 @@ tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f)
 print(tabla_frec_instant_bookable)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de instant_bookable", x = "¿Se puede reservar al instante?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de instant_bookable", x = "Reserva instantánea", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de instant_bookable", x = "Reserva instantánea", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable neighbourhood
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_neighbourhood <- length(unique(Airbnb_Data$neighbourhood))
@@ -494,16 +475,16 @@ tabla_frec_ord_1$F <- cumsum(tabla_frec_ord_8$f)
 print(tabla_frec_neighbourhood)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Después de ver la tabla de frecuencias y el histograma, decidimos que al haber tantos valores no merece la pena estudiarlos de manera univariante ya que no se puede apreciar correctamente.
@@ -523,7 +504,7 @@ HISTOGRAMA DE NÚMERO DE REVIEWS
 hist(Airbnb_Data$number_of_reviews, col = "#CB0019", main = "Histograma de Número de Reviews", xlab = "number_of_reviews", ylab = "Frecuencia", border = "black")
 ```
 
-RESUMEN DE PRECIOS
+RESUMEN NUMÉRICO DEL NÚMERO DE REVIEWS
 
 ```{r Resumennumber_of_reviews}
 Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
@@ -531,83 +512,56 @@ Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
 
 #### Estudio de la variable review_scores_rating
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_review_scores_rating <- length(unique (Airbnb_Data$review_scores_rating))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rating)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+HISTOGRAMA DE LA PUNTUACIÓN DE REVIEWS
 
 ```{r}
-
+hist(Airbnb_Data$review_scores_rating, col = "#CB0019", main = "Histograma de Puntuación de reviews", xlab = "review_scores_rating", ylab = "Frecuencia", border = "black")
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+RESUMEN NUMÉRICO DE LA PUNTUACIÓN DE REVIEWS
 
 ```{r}
-
-
-```
-
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
-
-```{r}
-
+Airbnb_Data |> select(review_scores_rating) |> descr() |> kable(digits = 2)
 ```
 
 #### Estudio de la variable bedrooms
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
-num_respuestas_neighbourhood <- length(unique(Airbnb_Data$neighbourhood))
-cat("El número de respuestas obtenido es: ", num_respuestas_neighbourhood)
+num_respuestas_bedrooms <- length(unique(Airbnb_Data$bedrooms))
+cat("El número de respuestas obtenido es: ", num_respuestas_bedrooms)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+HISTOGRAMA DEL NÚMERO DE HABITACIONES
 
 ```{r}
-tabla_frecuencias_beds <- Airbnb_Data |>                   
-     count(beds) |>
-     mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
- tabla_frecuencias_ordenada4 <- tabla_frecuencias_beds |> 
-     arrange(desc(n))
- tabla_frecuencias_ordenada4$F <- cumsum(tabla_frecuencias_ordenada4$f)
- tabla_frecuencias_ordenada4$N <- cumsum(tabla_frecuencias_ordenada4$n)
- print(tabla_frecuencias_ordenada4)
+Airbnb_Data |> ggplot(aes(bedrooms)) +
+  geom_histogram(
+    fill = "steelblue",  
+    bins = 11,           
+    col = "white"       
+  ) +
+
+  theme_bw()
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+ANÁLISIS NUMÉRICO
 
 ```{r}
-Airbnb_Data  |> group_by(bedrooms) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), bedrooms = reorder(bedrooms, -Frequency)) |> ggplot(aes(x = bedrooms, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de habitaciones", x = "Número de habitaciones", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#CB0017", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
-
-```{r}
-datos <- Airbnb_Data$beds                                    
- ggplot(data.frame(x = datos), aes(x = x)) +
-     geom_histogram(binwidth = 1, fill = "#CB0017", color = "black", 
-                    aes(y = ..density..), alpha = 0.6) +
-     stat_function(fun = dnorm, args = list(mean = mean(datos), 
-                                            sd = sd(datos)), color = "#CB0017", size = 1.5) +
-     labs(title = "Distribución del Número de Habitaciones",
-          x = "Número de Habitaciones",
-          y = "Frecuencia") 
-```
-
-ANÁLISIS NUMERICO
-
-```{r}
-Airbnb_Data |> select(beds) |> descr() |> kable(digits = 2) 
+Airbnb_Data |> select(bedrooms) |> descr() |> kable(digits = 2) 
 ```
 
 #### Estudio de la variable beds
 
-CONTAR EL NUMERO DE RESPUESTAS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_BEDS <- length(unique(Airbnb_Data$beds))     
@@ -627,13 +581,13 @@ tabla_frecuencias_beds <- Airbnb_Data |>
  print(tabla_frecuencias_ordenada4)
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA RELATIVA
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
 Airbnb_Data  |> group_by(beds) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), beds = reorder(beds, -Frequency)) |> ggplot(aes(x = beds, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de camas", x = "Número de camas", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-GRAFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
 datos <- Airbnb_Data$beds  
@@ -647,7 +601,7 @@ datos <- Airbnb_Data$beds
           y = "Frecuencia") 
 ```
 
-ANÁLISIS NÚMERICO
+ANÁLISIS NUMÉRICO
 
 ```{r}
 Airbnb_Data |> select(beds) |> descr() |> kable(digits = 2)
@@ -749,4 +703,4 @@ Airbnb_Data |>
 
 ## Conclusión
 
-Tras este analisis de los datos propuestos, podemos llegar a estas conclusiones:
+Tras este análisis de los datos propuestos, podemos llegar a estas conclusiones:
