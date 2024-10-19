@@ -124,14 +124,14 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_PRICE)
 HISTOGRAMA DE PRECIOS
 
 ```{r}
-Airbnb_Data |> ggplot(aes(log_price)) +
-  geom_histogram(
-    fill = "steelblue",  
-    bins = 10,           
-    col = "white"       
-  ) +
-
-  theme_bw()
+datos <- Airbnb_Data$log_price  
+ ggplot(data.frame(x = datos), aes(x = x)) +
+     geom_histogram(binwidth = 20, fill = "skyblue", color = "black", 
+                    ) +
+  
+     labs(title = "Distribución de los precios",
+          x = "Precios",
+          y = "Frecuencia") 
 ```
 
 RESUMEN DE PRECIOS
@@ -237,33 +237,18 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_Bathrooms)
 
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+HISTOGRAMA DEL NÚMERO DE BAÑOS
 
 ```{r}
-tabla_frecuencias_bathrooms <- Airbnb_Data |>
-     count(bathrooms) |>
-     mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
- tabla_frecuencias_ordenada4 <- tabla_frecuencias_bathrooms |> 
-     arrange(desc(n))
- tabla_frecuencias_ordenada4$F <- cumsum(tabla_frecuencias_ordenada4$f)
- tabla_frecuencias_ordenada4$N <- cumsum(tabla_frecuencias_ordenada4$n)
- print(tabla_frecuencias_ordenada4) 
+datos <- Airbnb_Data$bathrooms  
+ ggplot(data.frame(x = datos), aes(x = x)) +
+     geom_histogram(binwidth = 1, fill = "skyblue", color = "black", 
+                    ) +
+  
+     labs(title = "Distribución del número de baños",
+          x = "Número de baños",
+          y = "Frecuencia") 
 ```
-
-HISTOGRAMA SEGÚN NÚMERO DE BAÑOS
-
-```{r}
-datos <- Airbnb_Data$bathrooms
-ggplot(data.frame(x = datos), aes(x = x)) +
-     geom_histogram(binwidth = 1, fill = "#CB0017", color = "black", 
-                    aes(y = ..density..), alpha = 0.6) +
-     stat_function(fun = dnorm, args = list(mean = mean(datos),  sd = sd(datos)), color = "#CB0019", size = 1.5) +
-     labs(title = "Distribución del Número de Baños",
-         x = "Número de Baños",
-         y = "Frecuencia") 
-```
-
-ANÁLISIS NUMÉRICO
 
 ```{r}
 Airbnb_Data |> select(bathrooms) |> descr() |> kable(digits = 2)
@@ -385,7 +370,7 @@ print(tabla_frec_city)
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
-Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudad", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
@@ -470,8 +455,7 @@ TABLA DE FRECUENCIAS
 ```{r}
 tabla_frec_neighbourhood <- Airbnb_Data |> count(Airbnb_Data$neighbourhood) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
 tabla_frec_ord_1 <- tabla_frec_neighbourhood |> arrange(desc(n)) 
-tabla_frec_ord_1$N <- cumsum(tabla_frec_ord_8$n)
-tabla_frec_ord_1$F <- cumsum(tabla_frec_ord_8$f) 
+
 print(tabla_frec_neighbourhood)
 ```
 
@@ -487,7 +471,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Después de ver la tabla de frecuencias y el histograma, decidimos que al haber tantos valores no merece la pena estudiarlos de manera univariante ya que no se puede apreciar correctamente.
+Como podemos observar hay tantos barrios que el análisis es ilegibles
 
 #### Estudio de la variable number_of_reviews
 
@@ -500,8 +484,15 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_number_of_reviews)
 
 HISTOGRAMA DE NÚMERO DE REVIEWS
 
-```{r Histonumber_of_reviews}
-hist(Airbnb_Data$number_of_reviews, col = "#CB0019", main = "Histograma de Número de Reviews", xlab = "number_of_reviews", ylab = "Frecuencia", border = "black")
+```{r}
+datos <- Airbnb_Data$number_of_reviews  
+ ggplot(data.frame(x = datos), aes(x = x)) +
+     geom_histogram(binwidth = 20, fill = "skyblue", color = "black", 
+                    ) +
+  
+     labs(title = "Distribución del número de reseñas",
+          x = "Número de reseñas",
+          y = "Frecuencia") 
 ```
 
 RESUMEN NUMÉRICO DEL NÚMERO DE REVIEWS
@@ -522,7 +513,14 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rati
 HISTOGRAMA DE LA PUNTUACIÓN DE REVIEWS
 
 ```{r}
-hist(Airbnb_Data$review_scores_rating, col = "#CB0019", main = "Histograma de Puntuación de reviews", xlab = "review_scores_rating", ylab = "Frecuencia", border = "black")
+datos <- Airbnb_Data$review_scores_rating  
+ ggplot(data.frame(x = datos), aes(x = x)) +
+     geom_histogram(binwidth = 2, fill = "skyblue", color = "black", 
+                    ) +
+  
+     labs(title = "Distribución de la Puntuación de reviews",
+          x = "Puntuación de reviews",
+          y = "Frecuencia") 
 ```
 
 RESUMEN NUMÉRICO DE LA PUNTUACIÓN DE REVIEWS
@@ -543,14 +541,14 @@ cat("El número de respuestas obtenido es: ", num_respuestas_bedrooms)
 HISTOGRAMA DEL NÚMERO DE HABITACIONES
 
 ```{r}
-Airbnb_Data |> ggplot(aes(bedrooms)) +
-  geom_histogram(
-    fill = "steelblue",  
-    bins = 11,           
-    col = "white"       
-  ) +
-
-  theme_bw()
+datos <- Airbnb_Data$bedrooms  
+ ggplot(data.frame(x = datos), aes(x = x)) +
+     geom_histogram(binwidth = 1, fill = "skyblue", color = "black", 
+                    ) +
+  
+     labs(title = "Distribución del Número de Habitaciones",
+          x = "Número de Habitaciones",
+          y = "Frecuencia") 
 ```
 
 ANÁLISIS NUMÉRICO
@@ -568,36 +566,16 @@ num_respuestas_BEDS <- length(unique(Airbnb_Data$beds))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_BEDS)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
-
-```{r}
-tabla_frecuencias_beds <- Airbnb_Data |>                   
-     count(beds) |>
-     mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
- tabla_frecuencias_ordenada4 <- tabla_frecuencias_beds |> 
-     arrange(desc(n))
- tabla_frecuencias_ordenada4$F <- cumsum(tabla_frecuencias_ordenada4$f)
- tabla_frecuencias_ordenada4$N <- cumsum(tabla_frecuencias_ordenada4$n)
- print(tabla_frecuencias_ordenada4)
-```
-
-GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
-
-```{r}
-Airbnb_Data  |> group_by(beds) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), beds = reorder(beds, -Frequency)) |> ggplot(aes(x = beds, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de camas", x = "Número de camas", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "skyblue", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
-```
-
-GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
+HISTOGRAMA DEL NÚMERO DE CAMAS
 
 ```{r}
 datos <- Airbnb_Data$beds  
  ggplot(data.frame(x = datos), aes(x = x)) +
      geom_histogram(binwidth = 1, fill = "skyblue", color = "black", 
-                    aes(y = ..density..), alpha = 0.6) +
-     stat_function(fun = dnorm, args = list(mean = mean(datos), 
-                                            sd = sd(datos)), color = "#CB0019", size = 1.5) +
-     labs(title = "Distribución del Número de Habitaciones",
-          x = "Número de Habitaciones",
+                    ) +
+  
+     labs(title = "Distribución del Número de Camas",
+          x = "Número de camas",
           y = "Frecuencia") 
 ```
 
@@ -611,14 +589,14 @@ Airbnb_Data |> select(beds) |> descr() |> kable(digits = 2)
 
 #### Estudio de las variables bedrooms y price
 
-GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN
+GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
 
 ```{r}
 Airbnb_Data |>
     ggplot(aes(x = bedrooms, y = log_price)) +
     geom_point() +
-    geom_smooth() +
-    labs(title = "Gráfico de dispersión con ajuste de regresión")
+    geom_smooth(method = lm) +
+    labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
 GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
@@ -643,6 +621,15 @@ Airbnb_Data |> select(bedrooms, bathrooms, log_price, beds) |>
     round(2)
 ```
 
+MATRIZ DE COVARIANZA
+
+```{r}
+Airbnb_Data |> select(bedrooms, bathrooms, log_price, beds) |> 
+    drop_na() |>  
+    cov() |> 
+    round(2)
+```
+
 GRÁFICO DE CORRELACIÓN NUMÉRICA
 
 ```{r}
@@ -651,7 +638,17 @@ Airbnb_Data |>
     drop_na() |> 
     cor() |> 
     round(2) |>
-    corrplot(method = "ellipse",  type = "lower",      addCoef.col = "#CB0017", diag = FALSE)
+    corrplot(method = "ellipse",  type = "lower",      addCoef.col = "white", diag = FALSE)
+```
+
+#### Estudio de las variables bedrooms y bathrooms
+
+```{r}
+Airbnb_Data |> 
+    ggplot(aes(x = bedrooms, y = bathrooms)) +
+    geom_point() +
+    geom_smooth(method = lm) +
+    labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
 #### Estudio de las variables price y ciudad
@@ -680,24 +677,13 @@ ggplot(Airbnb_Data, aes(x = log_price, fill = city)) +
 
 Este histograma nos permite ver con claridad cómo los precios más caros se encuentran en Washington DC, aunque la mayor parte de las ofertas se encuentran en Nueva York y Los Ángeles
 
-GRÁFICO RESUMEN
-
-```{r fig.height=5, fig.width=10}
-##ggpairs(
- 
-##  Airbnb_Data |> select(log_price, bedrooms, bathrooms, beds, bed_type),
-  
-##  aes(col = bed_type)
-##)
-```
-
-#### Estudio de las variables bedrooms y bathrooms
+#### Estudio de las variables reseñas y precio
 
 ```{r}
-Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = bathrooms)) +
-    geom_point() +
-    geom_smooth() +
+Airbnb_Data |>
+    ggplot(aes(x = review_scores_rating, y = log_price)) +
+    geom_point() + 
+    geom_smooth(method = lm) +
     labs(title = "Gráfico de dispersión con ajuste de regresión")
 ```
 
