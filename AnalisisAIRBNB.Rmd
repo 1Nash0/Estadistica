@@ -132,7 +132,7 @@ HISTOGRAMA DE PRECIOS
 ```{r}
 datos <- Airbnb_Data$log_price  
  ggplot(data.frame(x = datos), aes(x = x)) +
-     geom_histogram(binwidth = 20, fill = "#F16E79", color = "black", 
+     geom_histogram(binwidth = 50, fill = "#F16E79", color = "black", 
                     ) +
   
      labs(title = "Distribución de los precios",
@@ -140,11 +140,17 @@ datos <- Airbnb_Data$log_price
           y = "Frecuencia") 
 ```
 
+Como podemos observar en este histograma la mayor parte de los precios se encuentran entre 1\$ y 250\$.
+
 RESUMEN DE PRECIOS
+
+Es necesario realizar también un resumen numérico para poder interpretar mejor el histograma.
 
 ```{r ResumenPrice}
 Airbnb_Data |> select(log_price) |> descr() |> kable(digits = 2)
 ```
+
+Igual que hemos visto en el histograma, el resumen numérico nos demuestra que la mayor parte de los precios se concentran entre 1\$ y los 185\$, el precio mínimo es de 1\$ y el máximo es de 1999\$, aunque en muy pocos casos se tienen estos valores, y la media de los precios se encuenta en los 160.37\$
 
 #### Estudio de la variable property_type
 
@@ -155,9 +161,11 @@ num_respuestas_TYPE <- length(unique(Airbnb_Data$property_type))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_TYPE)
 ```
 
-Como podemos observar, aquí si tiene sentido realizar un estudio para poder ver que tipo de casa es la que más se oferta
+Como podemos observar, aquí si tiene sentido realizar un estudio para poder ver que tipo de casa es la que más se oferta.
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Ahora estudiaremos las frecuencias relativas y absolutas.
 
 ```{r}
 tabla_frecuencias_type <- Airbnb_Data |>
@@ -176,11 +184,13 @@ print(tabla_frecuencias_ordenada3)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE PROPERTY_TYPE
 
+Para poder observar con mayor claridad los datos en función de la frecuencia relativa realizaremos una gráfica.
+
 ```{r}
 Airbnb_Data |> group_by(property_type) |> summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), property_type = reorder(property_type, -Frequency)) |> ggplot(aes(x = property_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de property_type", x = "Tipo de casa", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Esta gráfica nos permite ver con claridad cuáles son los tipos de propiedad que más se ofertan en Airbnb, como podemos observar la mayor parte de las ofertas son de apartamentos con el 66,1% del total, seguido de las casas particulares con un 22,3% y ya con mucha diferencia están los condiminios con un 3,59% del total y el resto de tipos de propiedades que suman entre sí un 5,7%.
+De la misma forma realizaremos una gáfica con los datos en función de la frecuencia absoluta.
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE PROPERTY_TYPE
 
@@ -199,6 +209,8 @@ Airbnb_Data |>
     theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+Estas gráficas nos permite ver con claridad cuáles son los tipos de propiedad que más se ofertan en Airbnb, como podemos observar la mayor parte de las ofertas son de apartamentos con el 66,1% del total, seguido de las casas particulares con un 22,3% y ya con mucha diferencia están los condiminios con un 3,59% del total y el resto de tipos de propiedades que suman entre sí un 5,7%.
+
 #### Estudio de la variable room_type
 
 CONTAR EL NÚMERO DE RESPUESTAS
@@ -208,7 +220,11 @@ num_respuestas_TYPE <- length(unique(Airbnb_Data$room_type))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_TYPE)
 ```
 
+Vamos a realizar el estudio para ver cuales son los tipos de habitaciones que más se ofertan en la plataforma.
+
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Primero estudiaremos las frecuencias relativas y absolutas
 
 ```{r}
 tabla_frecuencias_type <- Airbnb_Data |>
@@ -223,15 +239,21 @@ tabla_frecuencias_type <- Airbnb_Data |>
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE ROOM_TYPE
 
+Para poder observar con mayor claridad los datos en función de la frecuencia relativa realizaremos una gráfica.
+
 ```{r}
 Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de room_type", x = "Tipo de habitación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0017") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE ROOM_TYPE
 
+De la misma forma realizaremos una gáfica con los datos en función de la frecuencia absoluta.
+
 ```{r}
 Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de room_type", x = "Tipo de habitación", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+Estas gáficas nos muestran que la mayoría de ofertas nos ofrecen la totalidad de tipo de propiedad que alquilamos con más del 50% de ofertas, seguidas por las ofertas que nos ofrecen una habitación privada con un poco más del 40% del total y ya por último en menor cantidad nos encontramos las ofertas que ofrecen una habitación compartida con menos del 5% del total de ofertas.
 
 #### Estudio de la variable bathrooms
 
@@ -243,7 +265,11 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_Bathrooms)
 
 ```
 
+Aquí vamos a realizar un estudio para poder ver el número de baños que más se ofertan en la plataforma.
+
 HISTOGRAMA DEL NÚMERO DE BAÑOS
+
+Vamos a realizar un histograma con el número de baños que se ofertan.
 
 ```{r}
 datos <- Airbnb_Data$bathrooms  
@@ -256,9 +282,13 @@ datos <- Airbnb_Data$bathrooms
           y = "Frecuencia") 
 ```
 
+También vamos a realizar el resumen numérico que nos ayude a comprender mejor el gráfico.
+
 ```{r}
 Airbnb_Data |> select(bathrooms) |> descr() |> kable(digits = 2)
 ```
+
+Podemos observar que se usan decimales para hablar del número de baños, esto se debe a que para que se pueda consider un baño completo tiene que tener un lavabo, un inodoro, una ducha o bañera y un mueble de almacenamiento. El gáfico nos premite ver que la mayoría de ofertas solo tiene un baño, el mínimo de baños es 0 y el máximo son 8, y la media de baños que se ofertan son 1.25 baños.
 
 #### Estudio de la variable bed_type
 
@@ -268,6 +298,8 @@ CONTAR EL NÚMERO DE RESPUESTAS
 num_respuestas_bed_type <- length(unique(Airbnb_Data$bed_type))
 cat("El número de respuestas obtenido es: ", num_respuestas_bed_type)
 ```
+
+Aquí estudiaremos cuales son los tipos de habitaciones que más se ofertan.
 
 TABLA DE FRECUENCIAS
 
