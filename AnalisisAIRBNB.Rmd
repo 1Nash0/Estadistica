@@ -497,6 +497,8 @@ Estos gráficos nos muestran que la mayoría de los ofertantes son estrictos en 
 
 #### Estudio de la variable cleaning_fee
 
+Vamos a estudiar la variable cleaning_fee.
+
 CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
@@ -505,6 +507,8 @@ cat("El número de respuestas obtenido es: ", num_respuestas_cleaning_fee)
 ```
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Para ello estudiamos las frecuencias relativas y absolutas.
 
 ```{r}
 tabla_frec_cleaning_fee <- Airbnb_Data |> count(cleaning_fee) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -516,17 +520,25 @@ print(tabla_frec_cleaning_fee)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Para entender mejor los datos vamos a realizar un gráfico de barras con frecuencia relativa de esta variable.
+
 ```{r}
 Airbnb_Data  |> group_by(cleaning_fee) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), cleaning_fee = reorder(cleaning_fee, -Frequency)) |> ggplot(aes(x = cleaning_fee, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de cleaning_fee", x = "Impuesto de Limpieza", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+Del mismo modo vamos a realizar otro gráfico de barras pero esta vez de frecuencia absoluta.
+
 ```{r}
 Airbnb_Data  |> group_by(cleaning_fee) |>  summarise(Frequency = n()) |> mutate(cleaning_fee = reorder(cleaning_fee, -Frequency)) |> ggplot(aes(x = cleaning_fee, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de cleaning_fee", x = "Impuesto de Limpieza", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+Al ser una variable categórica dicotómica solo pueden aparecer dos resultados, verdadero o falso. Por tanto las gráficas tampoco nos dicen mucho, pero podemos ver que la mayoría de ofertas cuentan con un impuesto de limpieza.
+
 #### Estudio de la variable city
+
+Ahora vamos a analizar la variable city.  
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -536,6 +548,8 @@ cat("El número de respuestas obtenido es: ", num_respuestas_city)
 ```
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Analizaremos las frecuencias relativas y absolutas.
 
 ```{r}
 tabla_frec_city <- Airbnb_Data |> count(city) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -547,17 +561,26 @@ print(tabla_frec_city)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Para entender mejor los datos vamos a realizar un gráfico de barras con frecuencia relativa.
+ 
+
 ```{r}
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+Ahora realizaremos un gráfico de barras con frecuencia absoluta.
+
 ```{r}
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+Podemos ver que la mayor cantidad de ofertas se encuentran en NUeva York y en Los Ángeles. La menor cantidad se encuentra en Boston.
+
 #### Estudio de la variable host_identity_verified
+
+Ahora analizaremos la variable host_identity_verified.
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -567,6 +590,8 @@ cat("El número de respuestas obtenido es: ", num_respuestas_host_identity_verif
 ```
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+
 
 ```{r}
 tabla_frec_host_identity_verified <- Airbnb_Data |> count(Airbnb_Data$host_identity_verified) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -579,13 +604,13 @@ print(tabla_frec_host_identity_verified)
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
-Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "¿Está verificado?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(Frequency = Frequency/sum(Frequency), host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "¿Está verificado?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 #### Estudio de la variable instant_bookable
@@ -597,7 +622,7 @@ num_respuestas_instant_bookable <- length(unique(Airbnb_Data$instant_bookable))
 cat("El número de respuestas obtenido es: ", num_respuestas_instant_bookable)
 ```
 
-TABLA DE FRECUENCIAS
+FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
 ```{r}
 tabla_frec_instant_bookable <- Airbnb_Data |> count(Airbnb_Data$instant_bookable) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -621,6 +646,7 @@ Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mut
 
 #### Estudio de la variable neighbourhood
 
+A continuación vamos a estudiar la variable neighbourhood. 
 CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
@@ -628,7 +654,9 @@ num_respuestas_neighbourhood <- length(unique(Airbnb_Data$neighbourhood))
 cat("El número de respuestas obtenido es: ", num_respuestas_neighbourhood)
 ```
 
-TABLA DE FRECUENCIAS
+Al ver que el número de respuestas es muy elevado, el análisis no nos va a resultar muy útil. 
+
+FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
 ```{r}
 tabla_frec_neighbourhood <- Airbnb_Data |> count(Airbnb_Data$neighbourhood) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -637,19 +665,37 @@ tabla_frec_ord_1 <- tabla_frec_neighbourhood |> arrange(desc(n))
 print(tabla_frec_neighbourhood)
 ```
 
+Vamos a realizar un gráfico de barras con frecuencia relativa.
+
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 ```{r}
-Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n())  |>  mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+Del mismo modo hacemos otro gráfico de barras con la frecuencia absouluta.
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
 ```{r}
-Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "red") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |>  mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Como podemos observar hay tantos datos que el análisis es ilegibles
+Como podemos observar hay tantos datos que el análisis es ilegibles, por lo que hemos decidido hacer otras dos gráficas con solo los barrios que cuentan con más de 300 ofertas en la plataforma.
+
+GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE LOS BARRIOS CON MÁS DE 300 OFERTAS
+
+```{r}
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n())  |>  drop_na() |> filter(Frequency > 300)|>mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de barrios con más de 300 ofertas ", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
+```
+
+GRÁFICO DE BARRAS CON FRECUENCIA absoluta DE LOS BARRIOS CON MÁS DE 300 OFERTAS
+
+```{r}
+Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> drop_na() |> filter(Frequency > 300)|> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de barrios con más de 3000 ofertas", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+
+Después de analizar solo los barrios con más de 300 ofertas, vemos que la mayor parte de ofertas se encuentran en Williamsburg (Nueva York) con un 3.9 % del total con casi 3000 ofertas. 
 
 #### Estudio de la variable number_of_reviews
 
@@ -714,7 +760,7 @@ Airbnb_Data |> select(review_scores_rating) |> descr() |> kable(digits = 2)
 GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
 
 ```{r}
-Airbnb_Data |>
+Airbnb_Data |> 
     ggplot(aes(x = bedrooms, y = log_price)) +
     geom_point() +
     geom_smooth(method = lm) +
@@ -730,6 +776,7 @@ Airbnb_Data |>
     ggplot(aes(x = bedrooms, y = log_price, col = city)) +
     geom_point() +
     labs(title = "Gráfico de dispersión identificando por localidad ")
+
 ```
 
 #### Estudio de las variables bedrooms, bathrooms, price y beds
@@ -773,31 +820,29 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
-#### Estudio de las variables price y ciudad
+#### Estudio de las variables price y Ciudad
 
 HISTOGRAMA DE PRECIO POR CIUDAD
 
 ```{r}
-ggplot(Airbnb_Data, aes(x = log_price, fill = city)) +
-    
-    geom_histogram(
-        bins = 15, 
-        alpha = 0.7,  
-        position = 'identity'  
-    ) +
-    
-    labs(
-        title = "Histograma de Precio por Ciudad", 
-        x = "Price", 
-        y = "Frecuencia"
-    ) +
-   
-    theme_bw() +
-
-    guides(fill=guide_legend(title="Tipo"))
+Airbnb_Data |> 
+  ggplot(aes(x = city, y = log_price)) +  
+  geom_boxplot() +  
+  theme_bw() +  
+  labs(title = "Precio por Ciudad")  
 ```
 
-Este histograma nos permite ver con claridad cómo los precios más caros se encuentran en Washington DC, aunque la mayor parte de las ofertas se encuentran en Nueva York y Los Ángeles
+Gracias a este gráfico vemos que todas las ciudades presentan muchos valores atípicos, lleganto hasta los 2000$, salvo Boston y Chicago que tiene menos que el resto, llegando a los 1500$, por lo tanto para poder estudiar mejor estas varibles vamos a realizar otro box-plot centrandonos en los precios de menos de 500\$.
+
+```{r}
+Airbnb_Data |> filter(log_price < 500) |> 
+  ggplot(aes(x = city, y = log_price)) +  
+  geom_boxplot() +  
+  theme_bw() +  
+  labs(title = "Precio por Ciudad")  
+```
+
+Podemos ver con más claridad como los precios más caros nos los encontramos en San Francisco y los más baratos en Los Ángeles y Nueva York.
 
 #### Estudio de las variables reseñas y precio
 

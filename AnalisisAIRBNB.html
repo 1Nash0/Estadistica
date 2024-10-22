@@ -2032,8 +2032,8 @@ tabla_frecuencias_ordenada5 &lt;- tabla_frecuencias_bedrooms |&gt;
 sola habitación. Muy por detrás se encuentran las propiedades con 2
 habitaciones, seguidas de casas con 0 habitaciones, cosa que puede
 llegar a sorprender, sin embargo, ahora analizaremos el número de camas
-para corroborar que, aunque haya bastantes propiedades sin habitación,
-apenas habrá casas sin cama.</p>
+para ver si aunque haya varias propiedades sin habitaciones, no
+significa que no tengan cama.</p>
 <p>RESUMEN NUMÉRICO DEL NÚMERO DE HABITACIONES</p>
 <pre class="r"><code>Airbnb_Data |&gt; select(bedrooms) |&gt; descr() |&gt; kable(digits = 2) </code></pre>
 <table>
