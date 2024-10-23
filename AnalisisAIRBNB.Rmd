@@ -155,7 +155,7 @@ datos <- Airbnb_Data$log_price
                     ) +
   
      labs(title = "Distribución de los precios",
-          x = "Precios",
+          x = "Price",
           y = "Frecuencia") 
 ```
 
@@ -574,7 +574,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 Ahora realizaremos un gráfico de barras con frecuencia absoluta.
 
 ```{r}
-Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de city", x = "Ciudades", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Podemos ver que la mayor cantidad de ofertas se encuentran en Nueva York y en Los Ángeles. La menor cantidad se encuentra en Boston.
@@ -615,7 +615,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 Del mismo modo haremos otro gráfico con los datos en frecuencia absoluta.
 
 ```{r}
-Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 Vemos que aproximadamente el 66% de los anfitriones si tienen su identidad verificada.
@@ -707,7 +707,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE LOS BARRIOS CON MÁS DE 300 OFERTA
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n())  |>  drop_na() |> filter(Frequency > 300)|>mutate(Frequency = Frequency/sum(Frequency), neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de barrios con más de 300 ofertas ", x = "Barrio", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 60, hjust = 1)) 
 ```
 
-GRÁFICO DE BARRAS CON FRECUENCIA absoluta DE LOS BARRIOS CON MÁS DE 300 OFERTAS
+GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE LOS BARRIOS CON MÁS DE 300 OFERTAS
 
 ```{r}
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> drop_na() |> filter(Frequency > 300)|> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de barrios con más de 3000 ofertas", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 60, hjust = 1))
@@ -832,6 +832,8 @@ Airbnb_Data |>
 
 #### Estudio de las variables bedrooms, bathrooms, price y beds
 
+En primer lugar vamos a realizar un estudio de la correlación y la covarianza entre las variables bedrooms, bathrooms, price y beds, proporcionando una visión de cómo varían conjuntamente las variables.
+
 MATRIZ DE CORRELACIÓN
 
 ```{r}
@@ -850,6 +852,8 @@ Airbnb_Data |> select(bedrooms, bathrooms, log_price, beds) |>
     round(2)
 ```
 
+Ahora realizaremos un gráfico con los datos ya mostrados para poder entenderlos mejor.
+
 GRÁFICO DE CORRELACIÓN NUMÉRICA
 
 ```{r}
@@ -861,7 +865,25 @@ Airbnb_Data |>
     corrplot(method = "ellipse",  type = "lower",      addCoef.col = "white", diag = FALSE)
 ```
 
+Podemos observar que la correlación entre el precio y el resto de variables no es muy elevado, y es muy paracido en todas, en cambio podemos observar como hay una mayor correlación entre el número de habitaciones y el número de baños, y sobre todo entre el número de habitaciones y el número de camas.
+
 #### Estudio de las variables bedrooms y bathrooms
+
+Para llevar a cabo este estudio primero realizamos dos tablas de contingencia, una relativa y otra absoluta.
+
+TABLA DE CONTINGENCIA ENTRE BEDROOMS Y BATHROOMS RELATIVA
+
+```{r}
+kable(prop.table(table(Airbnb_Data$bedrooms, Airbnb_Data$bathrooms)), digits = 6)
+```
+
+TABLA DE CONTINGENCIA ENTRE BEDROOMS Y BATHROOMS ABSOLUTA
+
+```{r}
+kable(table(Airbnb_Data$bedrooms, Airbnb_Data$bathrooms))
+```
+
+Y en segundo lugar vamos a hacer un gráfico de dispersión de regresión lineal con los datos obtenidos
 
 ```{r}
 Airbnb_Data |> 
@@ -871,9 +893,24 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
+También hemos realizado los siguientes cálculos que nos aportan información útil para el análisis.
+
+```{r}
+lineal_1 <- Airbnb_Data |> 
+  select(bedrooms, bathrooms) |> 
+  with(lm(bedrooms ~ bathrooms))  
+summary(lineal_1)
+```
+
+Como podemos ver, la gráfica posee una correcta regresión lineal, a cuantas más habitaciones haya, mayor es el número de baños, y se estabiliza en los 5 baños, a pesar de la gran cantidad de valores atípicos que hay.
+
+Hablando de datos erróneos, estos son una minoría en comparación con la gran mayoría de valores presentes en la representación.
+
+Haciendo mención a la ecuación lineal, podemos saber cuales son los valores de los parámetros a y b (0.198603 y 0.86405). Resultando finalmente de esta forma: bathroom= 0.198603+ 0.86405 bedrooms.
+
+Por último, vemos que la variable bedrooms explica el 34,8% de la variablilidad de bathroom, lo cual no nos resulta muy útil ya que entonces el resultado obtenido en el estudio no es muy fiable ya que no es un valor muy elevado.
+
 #### Estudio de las variables price y city
-
-
 
 HISTOGRAMA DE PRECIO POR CIUDAD
 
@@ -907,8 +944,16 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión")
 ```
 
-De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cumulo se percibe mejor como el area bajo la curva que forman los puntos
+De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cumulo se percibe mejor como el area bajo la curva que forman los puntos.
 
 ## Conclusión
 
-Tras este análisis de los datos propuestos, podemos llegar a estas conclusiones:
+Tras el análisis de los datos, hemos llegado a las siguientes conclusiones:
+
+En el análisis univariante, se descartaron algunas variables debido a su escasa relevancia o la falta de información suficiente en ellas.
+
+A pesar de ello, se identificaron varias variables con una buena correlación lineal entre sí. La relación más notable fue entre las variables price y review_score_rating, donde se observó que las calificaciones de las reseñas dependen más del precio que viceversa.
+
+El objetivo principal de este estudio era analizar cómo varía el precio de las ofertas de Airbnb según las diferentes variables del conjunto de datos. Sin embargo, concluimos que la mayoría de las variables que podrían haber sido relevantes presentan un coeficiente de correlación lineal cercano a cero, lo que dificulta su análisis y limita la obtención de resultados significativos.
+
+Además, el estudio se ha visto afectado negativamente por la presencia de un gran número de datos atípicos, lo que ha impactado en la calidad de los resultados obtenidos.
