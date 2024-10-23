@@ -206,7 +206,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE PROPERTY_TYPE
 Para poder observar con mayor claridad los datos en función de la frecuencia relativa realizaremos una gráfica.
 
 ```{r}
-Airbnb_Data |> group_by(property_type) |> summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), property_type = reorder(property_type, -Frequency)) |> ggplot(aes(x = property_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de property_type", x = "Tipo de casa", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "darkred") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data |> group_by(property_type) |> summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), property_type = reorder(property_type, -Frequency)) |> ggplot(aes(x = property_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de property_type", x = "Tipo de casa", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 De la misma forma realizaremos una gráfica con los datos en función de la frecuencia absoluta.
@@ -261,7 +261,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE ROOM_TYPE
 Para poder observar con mayor claridad los datos en función de la frecuencia relativa realizaremos una gráfica.
 
 ```{r}
-Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de room_type", x = "Tipo de habitación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "darkred") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
+Airbnb_Data  |> group_by(room_type) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), room_type = reorder(room_type, -Frequency)) |> ggplot(aes(x = room_type, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de room_type", x = "Tipo de habitación", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA DE ROOM_TYPE
@@ -411,6 +411,8 @@ ANÁLISIS NUMÉRICO
 ```{r}
 Airbnb_Data |> select(beds) |> descr() |> kable(digits = 2)
 ```
+
+Se puede ver como la mayoria de ofertas ofrecen 1 o 2 camas, mientras que ya es infrecuente que haya de 5 para arriba, si no es que 0.
 
 #### Estudio de la variable bed_type
 
@@ -576,7 +578,7 @@ Ahora realizaremos un gráfico de barras con frecuencia absoluta.
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Podemos ver que la mayor cantidad de ofertas se encuentran en NUeva York y en Los Ángeles. La menor cantidad se encuentra en Boston.
+Podemos ver que la mayor cantidad de ofertas se encuentran en Nueva York y en Los Ángeles. La menor cantidad se encuentra en Boston.
 
 #### Estudio de la variable host_identity_verified
 
@@ -613,6 +615,8 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
+Vemos que aproximadamente el 66% de los anfitriones si tienen su identidad verificada
+
 #### Estudio de la variable instant_bookable
 
 CONTAR EL NÚMERO DE RESPUESTAS
@@ -643,6 +647,8 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 ```{r}
 Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de instant_bookable", x = "Reserva instantánea", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+De igual manera vemos como solo cerca de un 25% de las ofertas se pueden reservar al instante
 
 #### Estudio de la variable neighbourhood
 
@@ -681,7 +687,7 @@ GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |>  mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de neighbourhood", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Como podemos observar hay tantos datos que el análisis es ilegibles, por lo que hemos decidido hacer otras dos gráficas con solo los barrios que cuentan con más de 300 ofertas en la plataforma.
+Como podemos observar hay tantos datos que el análisis es ilegible, por lo que hemos decidido hacer otras dos gráficas con solo los barrios que cuentan con más de 300 ofertas en la plataforma.
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA DE LOS BARRIOS CON MÁS DE 300 OFERTAS
 
@@ -723,7 +729,10 @@ RESUMEN NUMÉRICO DEL NÚMERO DE REVIEWS
 
 ```{r Resumennumber_of_reviews}
 Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
+
 ```
+
+El primer cuarto de las ofertas totales oscila entre las 0 y 1 reseñas, mientras que la mitad apenas llega a las 6. Fuera de ahí, resultan más bien pocos los casos que muestren más de 100 reseñas
 
 #### Estudio de la variable review_scores_rating
 
@@ -752,6 +761,8 @@ RESUMEN NUMÉRICO DE LA PUNTUACIÓN DE REVIEWS
 ```{r}
 Airbnb_Data |> select(review_scores_rating) |> descr() |> kable(digits = 2)
 ```
+
+Se puede ver como la mayoria de puntuaciones se acumulan por encima de 80, mientras que las puntuaciones de 100 ocupan más de un cuarto del total
 
 ### Análisis bivariante:
 
@@ -832,7 +843,7 @@ Airbnb_Data |>
   labs(title = "Precio por Ciudad")  
 ```
 
-Gracias a este gráfico vemos que todas las ciudades presentan muchos valores atípicos, lleganto hasta los 2000$, salvo Boston y Chicago que tiene menos que el resto, llegando a los 1500$, por lo tanto para poder estudiar mejor estas varibles vamos a realizar otro box-plot centrandonos en los precios de menos de 500\$.
+Gracias a este gráfico vemos que todas las ciudades presentan muchos valores atípicos, lleganto hasta los 2000\$ , salvo Boston y Chicago que tiene menos que el resto, llegando a los 1500\$, por lo tanto para poder estudiar mejor estas varibles vamos a realizar otro box-plot centrandonos en los precios de menos de 500\$.
 
 ```{r}
 Airbnb_Data |> filter(log_price < 500) |> 
@@ -842,7 +853,7 @@ Airbnb_Data |> filter(log_price < 500) |>
   labs(title = "Precio por Ciudad")  
 ```
 
-Podemos ver con más claridad como los precios más caros nos los encontramos en San Francisco y los más baratos en Los Ángeles y Nueva York.
+Podemos ver con más claridad como los precios más caros nos los encontramos en San Francisco y los más baratos en Los Ángeles y Chicago.
 
 #### Estudio de las variables reseñas y precio
 
@@ -854,6 +865,9 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión")
 ```
 
+De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cumulo se percibe mejor como el area bajo la curva que forman los puntos
+
 ## Conclusión
 
 Tras este análisis de los datos propuestos, podemos llegar a estas conclusiones:
+
