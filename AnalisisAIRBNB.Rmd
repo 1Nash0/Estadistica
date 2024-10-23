@@ -540,7 +540,7 @@ Al ser una variable categórica dicotómica solo pueden aparecer dos resultados,
 
 #### Estudio de la variable city
 
-Ahora vamos a analizar la variable city.  
+Ahora vamos a analizar la variable city.
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -564,7 +564,6 @@ print(tabla_frec_city)
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
 Para entender mejor los datos vamos a realizar un gráfico de barras con frecuencia relativa.
- 
 
 ```{r}
 Airbnb_Data  |> group_by(city) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), city = reorder(city, -Frequency)) |> ggplot(aes(x = city, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de city", x = "Ciudades", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
@@ -593,7 +592,7 @@ cat("El número de respuestas obtenido es: ", num_respuestas_host_identity_verif
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
-
+Para hacer el análisis de esta variable vamos a estudir su frecuencia relativa y absoluta.
 
 ```{r}
 tabla_frec_host_identity_verified <- Airbnb_Data |> count(Airbnb_Data$host_identity_verified) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -605,19 +604,25 @@ print(tabla_frec_host_identity_verified)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Vamos a hacer un gráfico de barras con los datos en función de su frecuencia relativa para visualizarlos mejor.
+
 ```{r}
 Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(Frequency = Frequency/sum(Frequency), host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "¿Está verificado?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+Del mismo modo haremos otro gráfico con los datos en frecuencia absoluta.
+
 ```{r}
 Airbnb_Data  |> group_by(host_identity_verified) |>  summarise(Frequency = n()) |> drop_na() |> mutate(host_identity_verified = reorder(host_identity_verified, -Frequency)) |> ggplot(aes(x = host_identity_verified, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de host_identity_verified", x = "Identidad verfificada", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Vemos que aproximadamente el 66% de los anfitriones si tienen su identidad verificada
+Vemos que aproximadamente el 66% de los anfitriones si tienen su identidad verificada.
 
 #### Estudio de la variable instant_bookable
+
+A continuación vamos a realizar el estudio de la variable instant_bookable.
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -627,6 +632,8 @@ cat("El número de respuestas obtenido es: ", num_respuestas_instant_bookable)
 ```
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
+
+Realizamos el estudio de su frecuencia relativa y absoluta.
 
 ```{r}
 tabla_frec_instant_bookable <- Airbnb_Data |> count(Airbnb_Data$instant_bookable) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
@@ -638,21 +645,26 @@ print(tabla_frec_instant_bookable)
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
 
+Para interpretar mejor los datos vamos a hacer un gráfico de barras en función de su frecuencia relativa.
+
 ```{r}
 Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(Frequency = Frequency/sum(Frequency), instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + scale_y_continuous(labels = scales::percent) + theme_bw() + labs(title = "Gráfico de barras con frecuencia relativa de instant_bookable", x = "¿Se puede reservar al instante?", y = "Frecuencia relativa") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA ABSOLUTA
 
+Y otro gráfico en función de su frecuencia absoluta.
+
 ```{r}
 Airbnb_Data  |> group_by(instant_bookable) |>  summarise(Frequency = n()) |> mutate(instant_bookable = reorder(instant_bookable, -Frequency)) |> ggplot(aes(x = instant_bookable, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de instant_bookable", x = "Reserva instantánea", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-De igual manera vemos como solo cerca de un 25% de las ofertas se pueden reservar al instante
+De igual manera vemos como solo cerca de un 25% de las ofertas se pueden reservar al instante.
 
 #### Estudio de la variable neighbourhood
 
-A continuación vamos a estudiar la variable neighbourhood. 
+A continuación vamos a estudiar la variable neighbourhood.
+
 CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
@@ -660,7 +672,7 @@ num_respuestas_neighbourhood <- length(unique(Airbnb_Data$neighbourhood))
 cat("El número de respuestas obtenido es: ", num_respuestas_neighbourhood)
 ```
 
-Al ver que el número de respuestas es muy elevado, el análisis no nos va a resultar muy útil. 
+Al ver que el número de respuestas es muy elevado, el análisis no nos va a resultar muy útil.
 
 FRECUENCIAS RELATIVAS Y ABSOLUTAS
 
@@ -701,9 +713,11 @@ GRÁFICO DE BARRAS CON FRECUENCIA absoluta DE LOS BARRIOS CON MÁS DE 300 OFERTA
 Airbnb_Data  |> group_by(neighbourhood) |>  summarise(Frequency = n()) |> drop_na() |> filter(Frequency > 300)|> mutate(neighbourhood = reorder(neighbourhood, -Frequency)) |> ggplot(aes(x = neighbourhood, y = Frequency)) + geom_bar(stat = "identity", aes(fill = Frequency)) + theme_bw() + labs(title = "Gráfico de barras con frecuencia absoluta de barrios con más de 3000 ofertas", x = "Barrios", y = "Frecuencia absoluta") + scale_fill_gradient("Frecuencia", low = "#F16E79", high = "#CB0019") + theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
-Después de analizar solo los barrios con más de 300 ofertas, vemos que la mayor parte de ofertas se encuentran en Williamsburg (Nueva York) con un 3.9 % del total con casi 3000 ofertas. 
+Después de analizar solo los barrios con más de 300 ofertas, vemos que la mayor parte de ofertas se encuentran en Williamsburg (Nueva York) con un 3.9 % del total con casi 3000 ofertas.
 
 #### Estudio de la variable number_of_reviews
+
+Aquí vamos a realizar el estudio de la varible number_of_reviews
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -713,6 +727,8 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_number_of_reviews)
 ```
 
 HISTOGRAMA DE NÚMERO DE REVIEWS
+
+Para poder interpretar bien los datos vamos a hacer un histograma y un análisis numérico.
 
 ```{r}
 datos <- Airbnb_Data$number_of_reviews  
@@ -732,9 +748,11 @@ Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
 
 ```
 
-El primer cuarto de las ofertas totales oscila entre las 0 y 1 reseñas, mientras que la mitad apenas llega a las 6. Fuera de ahí, resultan más bien pocos los casos que muestren más de 100 reseñas
+El primer cuarto de las ofertas totales oscila entre las 0 y 1 reseñas, mientras que la mitad apenas llega a las 6. Fuera de ahí, resultan más bien pocos los casos que muestren más de 100 reseñas.
 
 #### Estudio de la variable review_scores_rating
+
+A continuación vamos a analizar la variable review_score_rating.
 
 CONTAR EL NÚMERO DE RESPUESTAS
 
@@ -744,6 +762,8 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rati
 ```
 
 HISTOGRAMA DE LA PUNTUACIÓN DE REVIEWS
+
+Primero vamos a hacer un histograma con los datos para poder visualizarlos mejor.
 
 ```{r}
 datos <- Airbnb_Data$review_scores_rating  
@@ -758,15 +778,33 @@ datos <- Airbnb_Data$review_scores_rating
 
 RESUMEN NUMÉRICO DE LA PUNTUACIÓN DE REVIEWS
 
+Y después hacemos un análisis numérico.
+
 ```{r}
 Airbnb_Data |> select(review_scores_rating) |> descr() |> kable(digits = 2)
 ```
 
-Se puede ver como la mayoria de puntuaciones se acumulan por encima de 80, mientras que las puntuaciones de 100 ocupan más de un cuarto del total
+Se puede ver como la mayoria de puntuaciones se acumulan por encima de 80, mientras que las puntuaciones de 100 ocupan más de un cuarto del total.
 
 ### Análisis bivariante:
 
 #### Estudio de las variables bedrooms y price
+
+Para llevar a cabo este estudio primero realizamos dos tablas de contingencia, una relativa y otra absoluta.
+
+TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE RELATIVA
+
+```{r}
+kable(prop.table(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms)), digits = 6)
+```
+
+TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE ABSOLUTA
+
+```{r}
+kable(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms))
+```
+
+Luego hacemos un gráfico de dispersión de regrsión lineal.
 
 GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
 
@@ -777,18 +815,7 @@ Airbnb_Data |>
     geom_smooth(method = lm) +
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
-
-GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
-
-Aquí añadimos la variable city:
-
-```{r}
-Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = log_price, col = city)) +
-    geom_point() +
-    labs(title = "Gráfico de dispersión identificando por localidad ")
-
-```
+Comenzando con la interpretación de la regresión lineal, si observamos la gráfica podemos darnos cuenta de que ésta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Esto se debe a que, como podemos ver la gráfica posee una correcta regresión lineal, pero algunos datos erróneos provocan un descenso en el coeficiente de correlación lineal.
 
 #### Estudio de las variables bedrooms, bathrooms, price y beds
 
@@ -831,7 +858,19 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
-#### Estudio de las variables price y Ciudad
+#### Estudio de las variables price y city
+
+GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
+
+Aquí añadimos la variable city:
+
+```{r}
+Airbnb_Data |> 
+    ggplot(aes(x = bedrooms, y = log_price, col = city)) +
+    geom_point() +
+    labs(title = "Gráfico de dispersión identificando por localidad ")
+
+```
 
 HISTOGRAMA DE PRECIO POR CIUDAD
 
@@ -870,4 +909,3 @@ De manera general, se puede observar que las reseñas con mejor puntaje tienden 
 ## Conclusión
 
 Tras este análisis de los datos propuestos, podemos llegar a estas conclusiones:
-
