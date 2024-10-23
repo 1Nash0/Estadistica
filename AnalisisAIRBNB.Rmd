@@ -815,7 +815,20 @@ Airbnb_Data |>
     geom_smooth(method = lm) +
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
-Comenzando con la interpretación de la regresión lineal, si observamos la gráfica podemos darnos cuenta de que ésta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Esto se debe a que, como podemos ver la gráfica posee una correcta regresión lineal, pero algunos datos erróneos provocan un descenso en el coeficiente de correlación lineal.
+
+Observando la gráfica podemos darnos cuenta de que ésta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Esto se debe a que, como podemos ver la gráfica posee una correcta regresión lineal, pero algunos datos erróneos provocan un descenso en el coeficiente de correlación lineal.
+
+GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
+
+Aquí añadimos la variable city:
+
+```{r}
+Airbnb_Data |> 
+    ggplot(aes(x = bedrooms, y = log_price, col = city)) +
+    geom_point() +
+    labs(title = "Gráfico de dispersión identificando por localidad ")
+
+```
 
 #### Estudio de las variables bedrooms, bathrooms, price y beds
 
@@ -860,17 +873,7 @@ Airbnb_Data |>
 
 #### Estudio de las variables price y city
 
-GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
 
-Aquí añadimos la variable city:
-
-```{r}
-Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = log_price, col = city)) +
-    geom_point() +
-    labs(title = "Gráfico de dispersión identificando por localidad ")
-
-```
 
 HISTOGRAMA DE PRECIO POR CIUDAD
 
