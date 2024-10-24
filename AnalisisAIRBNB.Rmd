@@ -291,7 +291,7 @@ TABLA DE FRECUENCIAS
 Estudiamos las frecuencias relativas y absolutas.
 
 ```{r}
-tabla_frecuencias_bathrooms <- Airbnb_Data |> count(bathrooms) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_bathrooms <- Airbnb_Data |> count(bathrooms) |> drop_na() |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
 tabla_frecuencias_ordenada4 <- tabla_frecuencias_bathrooms |>
     arrange(desc(n))
  tabla_frecuencias_ordenada4$F <- cumsum(tabla_frecuencias_ordenada4$f)
@@ -728,9 +728,24 @@ num_respuestas_number_of_reviews <- length(unique(Airbnb_Data$number_of_reviews)
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_number_of_reviews)
 ```
 
-Para poder interpretar bien los datos vamos a hacer un histograma y un análisis numérico.
+TABLA DE FRECUENCIAS
+
+Estudiamos las frecuencias relativas y absolutas con la tabla de frecuencias.
+
+```{r}
+intervalos <- seq(0, ceiling(max(Airbnb_Data$number_of_reviews)/20) * 20, by = 20)
+tabla_frecuencias_number_of_reviews <- Airbnb_Data |> count(number_of_reviews) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
+ tabla_frecuencias_number_of_reviews <- tabla_frecuencias_number_of_reviews |> mutate(Intervalo = cut(number_of_reviews, breaks = intervalos, right = FALSE)) |> group_by(Intervalo) |> summarise (n = sum(n), f = sum(f), N = sum(n), F = sum(f))
+ for (i in 2: nrow(tabla_frecuencias_number_of_reviews)) {
+   tabla_frecuencias_number_of_reviews$N[i] <- tabla_frecuencias_number_of_reviews$N[i] + tabla_frecuencias_number_of_reviews$N[i-1]
+    tabla_frecuencias_number_of_reviews$F[i] <- tabla_frecuencias_number_of_reviews$F[i] + tabla_frecuencias_number_of_reviews$F[i-1]}
+ tabla_frecuencias_ordenada1 <- tabla_frecuencias_number_of_reviews |> arrange(Intervalo)
+ print(tabla_frecuencias_ordenada1)
+```
 
 HISTOGRAMA DE NÚMERO DE REVIEWS
+
+Para poder interpretar bien los datos vamos a hacer un histograma y un análisis numérico.
 
 ```{r}
 datos <- Airbnb_Data$number_of_reviews  
@@ -758,11 +773,22 @@ Se puede observar que hay bastantes pocos casos en los que se muestran más de 1
 
 A continuación, vamos a analizar la variable review_score_rating.
 
-CONTAR EL NÚMERO DE RESPUESTAS
+CONTAR LA PUNTUACIÓN DE REVIEWS
 
 ```{r}
 num_respuestas_review_scores_rating <- length(unique (Airbnb_Data$review_scores_rating))
 cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rating)
+```
+
+TABLA DE FRECUENCIAS
+
+```{r}
+tabla_frecuencias_review_scores_rating <- Airbnb_Data |> count(review_scores_rating) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_ordenada5 <- tabla_frecuencias_review_scores_rating |>
+    arrange(desc(n))
+ tabla_frecuencias_ordenada5$F <- cumsum(tabla_frecuencias_ordenada5$f)
+ tabla_frecuencias_ordenada5$N <- cumsum(tabla_frecuencias_ordenada5$n)
+ print(tabla_frecuencias_ordenada5)
 ```
 
 HISTOGRAMA DE LA PUNTUACIÓN DE REVIEWS
@@ -772,7 +798,7 @@ Primero vamos a hacer un histograma de los datos para poder visualizarlos mejor.
 ```{r}
 datos <- Airbnb_Data$review_scores_rating  
  ggplot(data.frame(x = datos), aes(x = x)) +
-     geom_histogram(binwidth = 5, fill = "#F16E79", color = "black", 
+     geom_histogram(binwidth = 1, fill = "#F16E79", color = "black", 
                     ) +
   
      labs(title = "Distribución de la Puntuación de reviews",
@@ -800,26 +826,11 @@ Para llevar a cabo este estudio, primero realizamos dos tablas de contingencia, 
 
 TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE RELATIVA
 
-```{r}
-# Genera histogramas para las variables 'ph' y 'est' sin mostrar los gráficos, para determinar los intervalos de clase
-histo <- hist(Airbnb_Data$log_price, plot = FALSE)
-histo2 <- hist(Airbnb_Data$bedrooms, plot = FALSE, breaks = 4)
-# Clasifica las variables 'ph' y 'est' en categorías basadas en los intervalos anteriores y añade estas categorías al dataframe
-Airbnb_Data <- Airbnb_Data |> 
-  mutate(clase_price = cut(log_price, breaks = histo$breaks)) |> 
-  mutate(clase_bedrooms = cut(bedrooms, breaks = histo2$breaks))
-# Ajusta manualmente los niveles de la variable 'clase_ph' para incluir un intervalo específico
-levels(Airbnb_Data$clase_price) <- c(levels(Airbnb_Data$clase_bedrooms))
-
-# Crea una tabla de contingencia entre las categorías de 'ph' y 'est', añadiendo totales con addmargins(), y la muestra
-tabla <- table(Airbnb_Data$clase_price, Airbnb_Data$clase_bedrooms) |> addmargins()
-tabla |> kable()
-
-
+```{r eval=FALSE, include=FALSE}
 kable(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms))
 ```
 
-Luego hacemos un gráfico de dispersión de regresión lineal.
+No mostramos la tabla porque la abundancia de datos hace que sea inmensamente grande, pero hacemos un gráfico de dispersión de regresión lineal.
 
 GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
 
