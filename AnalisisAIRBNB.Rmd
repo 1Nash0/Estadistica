@@ -822,7 +822,7 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
 ```
 
-Observando la gráfica podemos darnos cuenta de que esta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Esto se debe a que, como podemos ver la gráfica posee una correcta regresión lineal, pero algunos datos erróneos provocan un descenso en el coeficiente de correlación lineal.
+Observando la gráfica podemos darnos cuenta de que esta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Podemos ver en la gráfica que hay un amento general del precio de la propiedad según los baños que haya. No obstante, hay algunos datos atípicos que provocan un descenso en el coeficiente de correlación lineal, pero aun así se puede identificar de manera correcta el aumento del precio de la propiedad por baño.
 
 GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
 
@@ -871,7 +871,7 @@ Airbnb_Data |>
     corrplot(method = "ellipse",  type = "lower",      addCoef.col = "white", diag = FALSE)
 ```
 
-Podemos observar que la correlación entre el precio y el resto de variables no es muy elevado, y es muy parecido en todas, en cambio podemos observar como hay una mayor correlación entre el número de habitaciones y el número de baños, y sobre todo entre el número de habitaciones y el número de camas.
+Podemos observar que la correlación entre el precio y el resto de variables no es muy elevado, y es muy parecido en todas, en cambio podemos observar como hay una mayor correlación entre el número de habitaciones y el número de baños y sobre todo entre el número de habitaciones y el número de camas. La relación entre el número de habitaciones y el de camas, nos ayuda a ver que cuantas más habitaciones, más personas pueden alojarse en la casa, ya que aumenta también el número de camas y no suelen ser habitaciones "vacías".
 
 #### Estudio de las variables bedrooms y bathrooms
 
@@ -908,13 +908,15 @@ lineal_1 <- Airbnb_Data |>
 summary(lineal_1)
 ```
 
-Como podemos ver, la gráfica posee una correcta regresión lineal, a cuantas más habitaciones haya, mayor es el número de baños, y se estabiliza en los 5 baños, a pesar de la gran cantidad de valores atípicos que hay.
+Como podemos ver, la gráfica posee una regresión lineal esperable, a cuantas más habitaciones haya, mayor es el número de baños, y se estabiliza en los 5 baños, a pesar de la gran cantidad de valores atípicos que hay.
 
 Hablando de datos erróneos, estos son una minoría en comparación con la gran mayoría de valores presentes en la representación.
 
 Haciendo mención a la ecuación lineal, podemos saber cuales son los valores de los parámetros a y b (0.198603 y 0.86405). Resultando finalmente de esta forma: bathroom= 0.198603+ 0.86405 bedrooms.
 
 Por último, vemos que la variable bedrooms explica el 34,8% de la variabilidad de bathroom, lo cual no nos resulta muy útil ya que entonces el resultado obtenido en el estudio no es muy fiable ya que no es un valor muy elevado.
+
+Aun así, debido al aumento de habitaciones respecto a los baños, podemos deducir que cuantos ms baños/habitaciones haya, más metros cuadrados tiene la propiedad. Con esto, y habiendo visto anteriormente que la variable del precio aumenta según sube la cantidad de baños, podemos relacionar que también el precio aumenta según el tamaño del área de la propiedad. Además, de que cuantas más habitaciones, mayor es el precio. Esto significa que, gracias al haber visto anteriormente comparando las variables de las habitaciones con las del número de camas, cuantas ms personas se puedan alojar, mayor será el precio de la propiedad.
 
 #### Estudio de las variables price y city
 
@@ -928,7 +930,7 @@ Airbnb_Data |>
   labs(title = "Precio por Ciudad")  
 ```
 
-Gracias a este gráfico vemos que todas las ciudades presentan muchos valores atípicos, llegando hasta los 2000\$ , salvo Boston y Chicago que tiene menos que el resto, llegando a los 1500\$, por lo tanto para poder estudiar mejor estas variables vamos a realizar otro box-plot centrándonos en los precios de menos de 500\$.
+Gracias a este gráfico vemos que todas las ciudades presentan muchos valores atípicos, llegando hasta los 2000\$, salvo Boston y Chicago que tiene menos que el resto, llegando a los 1500\$, por lo tanto para poder estudiar mejor estas variables vamos a realizar otro box-plot centrándonos en los precios de menos de 500\$.
 
 ```{r}
 Airbnb_Data |> filter(log_price < 500) |> 
@@ -950,16 +952,16 @@ Airbnb_Data |>
     labs(title = "Gráfico de dispersión con ajuste de regresión")
 ```
 
-De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cumulo se percibe mejor como el area bajo la curva que forman los puntos.
+De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cúmulo se percibe mejor como el area bajo la curva que forman los puntos.
 
 ## Conclusión
 
 Tras el análisis de los datos, hemos llegado a las siguientes conclusiones:
 
-En el análisis univariante, se descartaron algunas variables debido a su escasa relevancia o la falta de información suficiente en ellas.
-
-A pesar de ello, se identificaron varias variables con una buena correlación lineal entre sí. La relación más notable fue entre las variables price y review_score_rating, donde se observó que las calificaciones de las reseñas dependen más del precio que viceversa.
-
 El objetivo principal de este estudio era analizar cómo varía el precio de las ofertas de Airbnb según las diferentes variables del conjunto de datos. Sin embargo, concluimos que la mayoría de las variables que podrían haber sido relevantes presentan un coeficiente de correlación lineal cercano a cero, lo que dificulta su análisis y limita la obtención de resultados significativos.
 
-Además, el estudio se ha visto afectado negativamente por la presencia de un gran número de datos atípicos, lo que ha impactado en la calidad de los resultados obtenidos.
+En el análisis univariante, se descartaron algunas variables debido a su escasa relevancia o la falta de información suficiente en ellas. Además, para el análisis bivariante, el tipo de propiedad quizás hubiera influenciado en el precio, no obstante, después de analizar la variable de forma univariante, concluimos que para que el bajo número de diferentes propiedades a parte de las 2 principales, no sería de gran relevancia para el análisis.
+
+A pesar de ello, se identificaron varias variables con una buena correlación lineal entre sí. La relación más notable fue entre las variables price y review_score_rating, donde se observó que las calificaciones de las reseñas dependen más del precio que viceversa. También se pudo concluir que, efectivamente, el precio aumenta según aumenta la gente que pueda alojarse en la propiedad y según aumentan los metros cuadrados de la misma, teniéndolo muy en cuenta a la hora de reservar en esta plataforma.
+
+Cabe comentar que el estudio se ha visto ligeramente afectado negativamente debido la presencia de un algunos datos atípicos, lo que ha impactado en la calidad de los resultados obtenidos, pero que aun así se han logrado obtener unas respuestas válidas para el estudio.
