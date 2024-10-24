@@ -1,7 +1,6 @@
 ---
 title: "Análisis AIRBNB"
 author: "Grupo 12"
-date: "2024-10-06"
 output: 
   html_document:
     toc: true
@@ -21,9 +20,9 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ## Introducción y definición de objetivos
 
-Durante estos últimos años, plataformas donde se reservan propiedades durante un tiempo determinado, como es Airbnb, han ido subiendo su popularidad y mucha gente opta por este tipo de servicio. Es por ello que un análisis de este modelo de negocio es interesante tanto para los clientes como para la empresa propietaria de Airbnb. Por ello, el objetivo de esta investigación es observar como afectan al precio las distintas variables.
+Durante estos últimos años, plataformas donde se reservan propiedades durante un tiempo determinado, como es Airbnb, han ido subiendo su popularidad, optando mucha gente por este tipo de servicio. Es por ello que un análisis de este modelo de negocio es interesante tanto para los clientes como para la empresa propietaria de Airbnb. Por ello, el principal objetivo de esta investigación es observar como afectan al precio las distintas variables.
 
-Hemos descartado algunas variables dentro de esta base de datos. La primera es la variable bed_type, la cual descartamos ya que, tras hacer análisis previos, realmente no llevaría a cabo ningún cambio debido a que la gran mayoría son del mismo tipo (real bed). Las siguientes variables que hemos descartado son la de "latitud", "longitud" y "zipcode", ya que tienen que ver con la localización de la propiedad y eso ya se refleja con las variables "city" y "neighbourhood". Otra variable descartada es "amenities" ya que aparecían muchas más variables internas a esta que complicarían el análisis. Con la variable "accomodates", referida al número de personas que se alojan en la propiedad, decidimos descartarla porque hay otras variables como el número de camas que la hacen redundante. La variable "host_response_rate" (la tasa de respuesta del anfitrión) la descartamos ya que en muchos de los casos no hay información. Las variables como "first review" (fecha en que se realizó la primera valoración), "last review" (fecha en que se realizó la última valoración), "description" (la descripción), "host_has_profile_pic" (si el anfitrión tiene foto de perfil en Airbnb), "host_since" (fecha en la que se publicó por primera vez la propiedad), "name" (nombre de la propiedad) o "thumbnail_url" (URL de la página de la habitación)han sido descartadas porque no son relevantes para nuestro análisis.
+Hemos descartado algunas variables dentro de esta base de datos. Comenzamos descartando las variables "latitud", "longitud" y "zipcode", ya que tienen que ver con la localización de la propiedad y eso ya se refleja con las variables "city" y "neighbourhood". Otra variable descartada es "amenities" ya que contenía muchas más variables internas que complicarían el análisis. La variable "accomodates", referida al número de personas que se alojan en la propiedad, decidimos descartarla porque hay otras variables que la hacen redundante. La variable "host_response_rate" (tasa de respuesta del anfitrión) la descartamos ya que en muchos de los casos no hay información. Variables como "first review" (fecha en la que se realizó la primera valoración), "last review" (fecha en la que se realizó la última valoración), "description" (descripción), "host_has_profile_pic" (si el anfitrión tiene foto de perfil en Airbnb), "host_since" (fecha en la que se publicó por primera vez la propiedad), "name" (nombre de la propiedad) o "thumbnail_url" (URL de la página de la propiedad), han sido descartadas porque no son relevantes para nuestro análisis.
 
 ## Importación de datos y paquetes usados
 
@@ -80,11 +79,11 @@ Airbnb_Data <- read_csv("Airbnb_Data.csv")
 
     -   Tipo: Categórica dicotómica. (TRUE, hay / FALSE, no hay)
 
--   `city`: Ciudad donde se ubica la propiedad.
+-   `city`: Ciudad de ubicación de la propiedad.
 
     -   Tipo: Categórica multinivel.
 
--   `neighbourhood`: Barrio donde se ubica la propiedad.
+-   `neighbourhood`: Barrio de ubicación de la propiedad.
 
     -   Tipo: Categórica multinivel.
 
@@ -96,11 +95,11 @@ Airbnb_Data <- read_csv("Airbnb_Data.csv")
 
     -   Tipo: Categórica dicotómica. (TRUE, sí / FALSE, no)
 
--   `number_of_reviews`: Número de valoraciones de la propiedad.
+-   `number_of_reviews`: Número de reviews de la propiedad.
 
     -   Tipo: Numérica discreta.
 
--   `review_scores_rating`: Puntuación de las valoraciones de la propiedad.
+-   `review_scores_rating`: Puntuación de las reviews de la propiedad.
 
     -   Tipo: Numérica discreta.
 
@@ -342,7 +341,7 @@ TABLA DE FRECUENCIAS
 Estudiamos las frecuencias relativas y absolutas.
 
 ```{r}
-tabla_frecuencias_bedrooms <- Airbnb_Data |> count(bedrooms) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_bedrooms <- Airbnb_Data |> count(bedrooms) |> drop_na() |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
 tabla_frecuencias_ordenada5 <- tabla_frecuencias_bedrooms |>
     arrange(desc(n))
  tabla_frecuencias_ordenada5$F <- cumsum(tabla_frecuencias_ordenada5$f)
@@ -351,6 +350,8 @@ tabla_frecuencias_ordenada5 <- tabla_frecuencias_bedrooms |>
 ```
 
 HISTOGRAMA DEL NÚMERO DE HABITACIONES
+
+Realizamos un histograma para verlo claramente.
 
 ```{r}
 datos <- Airbnb_Data$bedrooms  
@@ -371,6 +372,8 @@ RESUMEN NUMÉRICO DEL NÚMERO DE HABITACIONES
 Airbnb_Data |> select(bedrooms) |> descr() |> kable(digits = 2) 
 ```
 
+Visto lo visto, comprobamos que la media está en 1.27, y la mediana en 1, pues la mayor parte de las propiedades tienen una habitación. Cabe destacar que el máximo se encuentra en hasta 10 habitaciones, valor sorprendente pero muy atípico, además de destacar ese mínimo en 0 que si que se da en bastantes casos.
+
 #### Estudio de la variable beds
 
 CONTAR EL NÚMERO DE RESPUESTAS
@@ -385,7 +388,7 @@ TABLA DE FRECUENCIAS
 Estudiamos las frecuencias relativas y absolutas.
 
 ```{r}
-tabla_frecuencias_beds <- Airbnb_Data |> count(beds) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_beds <- Airbnb_Data |> count(beds) |> drop_na() |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
 tabla_frecuencias_ordenada6 <- tabla_frecuencias_beds |>
     arrange(desc(n))
  tabla_frecuencias_ordenada6$F <- cumsum(tabla_frecuencias_ordenada6$f)
@@ -394,6 +397,8 @@ tabla_frecuencias_ordenada6 <- tabla_frecuencias_beds |>
 ```
 
 HISTOGRAMA DEL NÚMERO DE CAMAS
+
+Realizamos aquí un histograma para verlo más claro.
 
 ```{r}
 datos <- Airbnb_Data$beds  
@@ -414,7 +419,7 @@ ANÁLISIS NUMÉRICO
 Airbnb_Data |> select(beds) |> descr() |> kable(digits = 2)
 ```
 
-Llama la atención que el mínimo sea 0, es decir, que se oferten casas sin cama, sin embargo, este dato es muy atípico y es muy poco apreciable el porcentaje de propiedades con 0 camas, al igual que el máximo, que está en 18 camas. Tras ello observamos que la media está en 1.71 camas y la mediana en 1, el valor que más se repite.
+Llama la atención que el mínimo sea 0, es decir, que se oferten casas sin cama, sin embargo, este dato es muy atípico y es muy poco apreciable el porcentaje de propiedades con 0 camas, al igual que el máximo, que está en 18 camas. Tras ello observamos que la media está en 1.71 camas y la mediana en 1, el valor predominante.
 
 #### Estudio de la variable bed_type
 
@@ -427,7 +432,7 @@ cat("El número de respuestas obtenido es: ", num_respuestas_bed_type)
 
 Aquí estudiaremos cuales son los tipos de camas que más se ofertan.
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 Primero estudiaremos las frecuencias relativas y absolutas.
 
@@ -469,16 +474,17 @@ cat("El número de respuestas es: ", num_respuestas_cancellation_policy)
 
 Aquí vamos a estudiar cuales son las políticas de cancelación más presentes en la plataforma.
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 Primero estudiaremos las frecuencias relativas y absolutas.
 
 ```{r}
-tabla_frec_cancellation_policy <- Airbnb_Data |> count(cancellation_policy) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
-tabla_frec_ord_6 <- tabla_frec_bed_type |> arrange(desc(n)) 
-tabla_frec_ord_6$N <- cumsum(tabla_frec_ord_6$n)
-tabla_frec_ord_6$F <- cumsum(tabla_frec_ord_6$f) 
-print(tabla_frec_cancellation_policy)
+tabla_frecuencias_cancellation_policy <- Airbnb_Data |> count(cancellation_policy) |> drop_na() |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_ordenada6 <- tabla_frecuencias_cancellation_policy |>
+    arrange(desc(n))
+ tabla_frecuencias_ordenada6$F <- cumsum(tabla_frecuencias_ordenada6$f)
+ tabla_frecuencias_ordenada6$N <- cumsum(tabla_frecuencias_ordenada6$n)
+ print(tabla_frecuencias_ordenada6)
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
@@ -510,7 +516,7 @@ num_respuestas_cleaning_fee <- length(unique(Airbnb_Data$cleaning_fee))
 cat("El número de respuestas obtenido es: ", num_respuestas_cleaning_fee)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 Para ello estudiamos las frecuencias relativas y absolutas.
 
@@ -519,7 +525,7 @@ tabla_frec_cleaning_fee <- Airbnb_Data |> count(cleaning_fee) |> mutate(f = n/nr
 tabla_frec_ord_7 <- tabla_frec_cleaning_fee |> arrange(desc(n)) 
 tabla_frec_ord_7$N <- cumsum(tabla_frec_ord_7$n)
 tabla_frec_ord_7$F <- cumsum(tabla_frec_ord_7$f) 
-print(tabla_frec_cleaning_fee)
+print(tabla_frec_ord_7)
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
@@ -551,7 +557,7 @@ num_respuestas_city <- length(unique(Airbnb_Data$city))
 cat("El número de respuestas obtenido es: ", num_respuestas_city)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 Analizaremos las frecuencias relativas y absolutas.
 
@@ -560,7 +566,7 @@ tabla_frec_city <- Airbnb_Data |> count(city) |> mutate(f = n/nrow(Airbnb_Data),
 tabla_frec_ord_8 <- tabla_frec_city |> arrange(desc(n)) 
 tabla_frec_ord_8$N <- cumsum(tabla_frec_ord_8$n)
 tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f) 
-print(tabla_frec_city)
+print(tabla_frec_ord_8)
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
@@ -597,11 +603,11 @@ FRECUENCIAS RELATIVAS Y ABSOLUTAS
 Para hacer el análisis de esta variable vamos a estudiar su frecuencia relativa y absoluta.
 
 ```{r}
-tabla_frec_host_identity_verified <- Airbnb_Data |> count(Airbnb_Data$host_identity_verified) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
-tabla_frec_ord_8 <- tabla_frec_host_identity_verified |> arrange(desc(n)) 
-tabla_frec_ord_8$N <- cumsum(tabla_frec_ord_8$n)
-tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f) 
-print(tabla_frec_host_identity_verified)
+tabla_frec_host_identity_verified <- Airbnb_Data |> count(Airbnb_Data$host_identity_verified) |> drop_na() |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
+tabla_frec_ord_9 <- tabla_frec_host_identity_verified |> arrange(desc(n)) 
+tabla_frec_ord_9$N <- cumsum(tabla_frec_ord_9$n)
+tabla_frec_ord_9$F <- cumsum(tabla_frec_ord_9$f) 
+print(tabla_frec_ord_9)
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
@@ -633,16 +639,16 @@ num_respuestas_instant_bookable <- length(unique(Airbnb_Data$instant_bookable))
 cat("El número de respuestas obtenido es: ", num_respuestas_instant_bookable)
 ```
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 Realizamos el estudio de su frecuencia relativa y absoluta.
 
 ```{r}
 tabla_frec_instant_bookable <- Airbnb_Data |> count(Airbnb_Data$instant_bookable) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
-tabla_frec_ord_8 <- tabla_frec_instant_bookable |> arrange(desc(n)) 
-tabla_frec_ord_8$N <- cumsum(tabla_frec_ord_8$n)
-tabla_frec_ord_8$F <- cumsum(tabla_frec_ord_8$f) 
-print(tabla_frec_instant_bookable)
+tabla_frec_ord_10 <- tabla_frec_instant_bookable |> arrange(desc(n)) 
+tabla_frec_ord_10$N <- cumsum(tabla_frec_ord_10$n)
+tabla_frec_ord_10$F <- cumsum(tabla_frec_ord_10$f) 
+print(tabla_frec_ord_10)
 ```
 
 GRÁFICO DE BARRAS CON FRECUENCIA RELATIVA
@@ -676,13 +682,14 @@ cat("El número de respuestas obtenido es: ", num_respuestas_neighbourhood)
 
 Al ver que el número de respuestas es muy elevado, el análisis no nos va a resultar muy útil.
 
-FRECUENCIAS RELATIVAS Y ABSOLUTAS
+TABLA DE FRECUENCIAS
 
 ```{r}
 tabla_frec_neighbourhood <- Airbnb_Data |> count(Airbnb_Data$neighbourhood) |> mutate(f = n/nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
-tabla_frec_ord_1 <- tabla_frec_neighbourhood |> arrange(desc(n)) 
-
-print(tabla_frec_neighbourhood)
+tabla_frec_ord_11 <- tabla_frec_neighbourhood |> arrange(desc(n)) 
+tabla_frec_ord_11$N <- cumsum(tabla_frec_ord_11$n)
+tabla_frec_ord_11$F <- cumsum(tabla_frec_ord_11$f) 
+print(tabla_frec_ord_11)
 ```
 
 Vamos a realizar un gráfico de barras con frecuencia relativa.
@@ -730,17 +737,17 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_number_of_reviews)
 
 TABLA DE FRECUENCIAS
 
-Estudiamos las frecuencias relativas y absolutas con la tabla de frecuencias.
+Estudiamos las frecuencias relativas y absolutas con la tabla de frecuencias, dividiendo los valores en rangos de 20 por la gran cantidad de respuestas que hay en esta variable.
 
 ```{r}
 intervalos <- seq(0, ceiling(max(Airbnb_Data$number_of_reviews)/20) * 20, by = 20)
-tabla_frecuencias_number_of_reviews <- Airbnb_Data |> count(number_of_reviews) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
+tabla_frecuencias_number_of_reviews <- Airbnb_Data |> count(number_of_reviews) |> drop_na() |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f))
  tabla_frecuencias_number_of_reviews <- tabla_frecuencias_number_of_reviews |> mutate(Intervalo = cut(number_of_reviews, breaks = intervalos, right = FALSE)) |> group_by(Intervalo) |> summarise (n = sum(n), f = sum(f), N = sum(n), F = sum(f))
  for (i in 2: nrow(tabla_frecuencias_number_of_reviews)) {
    tabla_frecuencias_number_of_reviews$N[i] <- tabla_frecuencias_number_of_reviews$N[i] + tabla_frecuencias_number_of_reviews$N[i-1]
     tabla_frecuencias_number_of_reviews$F[i] <- tabla_frecuencias_number_of_reviews$F[i] + tabla_frecuencias_number_of_reviews$F[i-1]}
- tabla_frecuencias_ordenada1 <- tabla_frecuencias_number_of_reviews |> arrange(Intervalo)
- print(tabla_frecuencias_ordenada1)
+ tabla_frecuencias_ordenada12 <- tabla_frecuencias_number_of_reviews |> arrange(Intervalo)
+ print(tabla_frecuencias_ordenada12)
 ```
 
 HISTOGRAMA DE NÚMERO DE REVIEWS
@@ -758,7 +765,7 @@ datos <- Airbnb_Data$number_of_reviews
           y = "Frecuencia") 
 ```
 
-En este histograma, se puede ver que la gran mayoría de propiedades ofertadas cuentan con entre 0 y 20 reseñas. Las propidades con más de 20 reseñas conforman un número total de unas 30000 ofertas, lo cual supone menos de la mitad de las ofertas totales.
+En este histograma, se puede ver que la gran mayoría de propiedades ofertadas cuentan con entre 0 y 20 reseñas. Las propidades con más de 20 reviews conforman un número total de unas 30000 ofertas, lo cual supone menos de la mitad de las ofertas totales.
 
 RESUMEN NUMÉRICO DEL NÚMERO DE REVIEWS
 
@@ -767,13 +774,13 @@ Airbnb_Data |> select(number_of_reviews) |> descr() |> kable(digits = 2)
 
 ```
 
-Se puede observar que hay bastantes pocos casos en los que se muestran más de 100 reseñas. Aun así, se puede ver que la media de reseñas por propiedad son de casi 21, teniendo en cuenta que hay propiedades de entre 0 y 605 reseñas..
+Se puede observar que hay bastantes pocos casos en los que se muestran más de 100 reseñas, siendo así que la media de reviews por propiedad es de casi 21. Sin embargo, hay propiedades con entre 0 y 605 reseñas.
 
 #### Estudio de la variable review_scores_rating
 
 A continuación, vamos a analizar la variable review_score_rating.
 
-CONTAR LA PUNTUACIÓN DE REVIEWS
+CONTAR EL NÚMERO DE RESPUESTAS
 
 ```{r}
 num_respuestas_review_scores_rating <- length(unique (Airbnb_Data$review_scores_rating))
@@ -782,13 +789,15 @@ cat("La cantidad de respuestas obtenidas es:", num_respuestas_review_scores_rati
 
 TABLA DE FRECUENCIAS
 
+Estudiamos las frecuencias relativas y absolutas.
+
 ```{r}
-tabla_frecuencias_review_scores_rating <- Airbnb_Data |> count(review_scores_rating) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
-tabla_frecuencias_ordenada5 <- tabla_frecuencias_review_scores_rating |>
+tabla_frecuencias_review_scores_rating <- Airbnb_Data |> drop_na() |>count(review_scores_rating) |> mutate(f = n / nrow(Airbnb_Data), N = cumsum(n), F = cumsum(f)) 
+tabla_frecuencias_ordenada13 <- tabla_frecuencias_review_scores_rating |>
     arrange(desc(n))
- tabla_frecuencias_ordenada5$F <- cumsum(tabla_frecuencias_ordenada5$f)
- tabla_frecuencias_ordenada5$N <- cumsum(tabla_frecuencias_ordenada5$n)
- print(tabla_frecuencias_ordenada5)
+ tabla_frecuencias_ordenada13$F <- cumsum(tabla_frecuencias_ordenada5$f)
+ tabla_frecuencias_ordenada13$N <- cumsum(tabla_frecuencias_ordenada5$n)
+ print(tabla_frecuencias_ordenada13)
 ```
 
 HISTOGRAMA DE LA PUNTUACIÓN DE REVIEWS
@@ -819,42 +828,6 @@ Airbnb_Data |> select(review_scores_rating) |> descr() |> kable(digits = 2)
 Después de analizar la variable, al haber visto que la gran mayoría de puntuaciones son altas, la media está en torno a 94 y la mediana es de 96. Aunque también se ve que la puntación no baja nunca de 20.
 
 ### Análisis bivariante:
-
-#### Estudio de las variables bedrooms y price
-
-Para llevar a cabo este estudio, primero realizamos dos tablas de contingencia, una relativa y otra absoluta.
-
-TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE RELATIVA
-
-```{r eval=FALSE, include=FALSE}
-kable(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms))
-```
-
-No mostramos la tabla porque la abundancia de datos hace que sea inmensamente grande, pero hacemos un gráfico de dispersión de regresión lineal.
-
-GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
-
-```{r}
-Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = log_price)) +
-    geom_point() +
-    geom_smooth(method = lm) +
-    labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
-```
-
-Observando la gráfica podemos darnos cuenta de que esta y el valor obtenido en el estudio de correlación numérica son coherentes entre sí. Podemos ver en la gráfica que hay un amento general del precio de la propiedad según los baños que haya. No obstante, hay algunos datos atípicos que provocan un descenso en el coeficiente de correlación lineal, pero aun así se puede identificar de manera correcta el aumento del precio de la propiedad por baño.
-
-GRÁFICO DE DISPERSIÓN IDENTIFICANDO POR LOCALIDAD
-
-Aquí añadimos la variable city:
-
-```{r}
-Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = log_price, col = city)) +
-    geom_point() +
-    labs(title = "Gráfico de dispersión identificando por localidad ")
-
-```
 
 #### Estudio de las variables bedrooms, bathrooms, price y beds
 
@@ -891,7 +864,40 @@ Airbnb_Data |>
     corrplot(method = "ellipse",  type = "lower",      addCoef.col = "white", diag = FALSE)
 ```
 
-Podemos observar que la correlación entre el precio y el resto de variables no es muy elevado, y es muy parecido en todas, en cambio podemos observar como hay una mayor correlación entre el número de habitaciones y el número de baños y sobre todo entre el número de habitaciones y el número de camas. La relación entre el número de habitaciones y el de camas, nos ayuda a ver que cuantas más habitaciones, más personas pueden alojarse en la casa, ya que aumenta también el número de camas y no suelen ser habitaciones "vacías".
+Podemos observar que la correlación entre el precio y el resto de variables no es tan elevado por la gran cantidad de valores atípicos que posee nuestra base de datos, sin embargo, es suficiente como para estudiar la relación. Podemos observar como hay una mayor correlación entre el número de habitaciones y el número de baños, y sobre todo entre el número de habitaciones y el número de camas como es lógico. La relación entre el número de habitaciones y el de camas, nos ayuda a ver que cuantas más habitaciones, más personas pueden alojarse en la casa, ya que aumenta también el número de camas y no suelen ser habitaciones "vacías".
+
+#### Estudio de las variables bedrooms y price
+
+Para llevar a cabo este estudio, primero realizamos dos tablas de contingencia, una relativa y otra absoluta.
+
+TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE RELATIVA
+
+```{r eval=FALSE, include=FALSE}
+kable(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms))
+```
+
+No mostramos la tabla porque la abundancia de datos hace que sea inmensamente grande, pero hacemos un gráfico de dispersión de regresión lineal.
+
+GRÁFICO DE DISPERSIÓN CON AJUSTE DE REGRESIÓN LINEAL
+
+```{r}
+Airbnb_Data |> 
+    ggplot(aes(x = bedrooms, y = log_price)) +
+    geom_point() +
+    geom_smooth(method = lm) +
+    labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
+```
+
+Podemos ver en la gráfica que hay un aumento general del precio de la propiedad según las habitaciones que haya. No obstante, hay una abundancia de datos atípicos hacen un tanto confuso el gráfico, pero aun así se puede identificar de manera correcta el aumento del precio de la propiedad a la par que las habitaciones. No obstante vamos a realizar unos cálculos que nos serán de utilidad para compender mejor la realción.
+
+```{r}
+lineal_1 <- Airbnb_Data |> drop_na() |>
+  select(bedrooms, log_price) |> 
+  with(lm(bedrooms ~ log_price))  
+summary(lineal_1)
+```
+
+Con estos resultados corroboramos que la abrumadora cantidad de respuestas variadas en cuanto al precio, los datos erróneos son un tanto altos. Esto no quita que exista cierta correlación entre ambas variables, la variable habitaciones explica un 30,29% del precio.
 
 #### Estudio de las variables bedrooms y bathrooms
 
@@ -909,11 +915,11 @@ TABLA DE CONTINGENCIA ENTRE BEDROOMS Y BATHROOMS ABSOLUTA
 kable(table(Airbnb_Data$bedrooms, Airbnb_Data$bathrooms))
 ```
 
-Y en segundo lugar vamos a hacer un gráfico de dispersión de regresión lineal con los datos obtenidos
+Y en segundo lugar vamos a hacer un gráfico de dispersión con ajuste de regresión lineal con los datos obtenidos
 
 ```{r}
 Airbnb_Data |> 
-    ggplot(aes(x = bedrooms, y = bathrooms)) +
+    ggplot(aes(x = bathrooms, y = bedrooms)) +
     geom_point() +
     geom_smooth(method = lm) +
     labs(title = "Gráfico de dispersión con ajuste de regresión lineal")
@@ -922,21 +928,21 @@ Airbnb_Data |>
 También hemos realizado los siguientes cálculos que nos aportan información útil para el análisis.
 
 ```{r}
-lineal_1 <- Airbnb_Data |> 
+lineal_1 <- Airbnb_Data |> drop_na() |>
   select(bedrooms, bathrooms) |> 
   with(lm(bedrooms ~ bathrooms))  
 summary(lineal_1)
 ```
 
-Como podemos ver, la gráfica posee una regresión lineal esperable, a cuantas más habitaciones haya, mayor es el número de baños, y se estabiliza en los 5 baños, a pesar de la gran cantidad de valores atípicos que hay.
+Como podemos ver, la gráfica posee una regresión lineal esperable, a cuantas más habitaciones haya, mayor es el número de baños, a pesar de la gran cantidad de valores atípicos que hay.
 
-Hablando de datos erróneos, estos son una minoría en comparación con la gran mayoría de valores presentes en la representación.
+Hablando de datos erróneos, estos son una minoría en comparación con la gran mayoría de valores presentes.
 
-Haciendo mención a la ecuación lineal, podemos saber cuales son los valores de los parámetros a y b (0.198603 y 0.86405). Resultando finalmente de esta forma: bathroom= 0.198603+ 0.86405 bedrooms.
+Haciendo mención a la ecuación lineal, podemos saber cuales son los valores de los parámetros a y b (0.278301 y 0.8016). Resultando finalmente de esta forma: bathroom= 0.278301+ 0.8016 bedrooms.
 
-Por último, vemos que la variable bedrooms explica el 34,8% de la variabilidad de bathroom, lo cual no nos resulta muy útil ya que entonces el resultado obtenido en el estudio no es muy fiable ya que no es un valor muy elevado.
+Por último, vemos que la variable bedrooms explica el 27,9% de la variabilidad de bathroom, lo cual no nos resulta muy útil ya que entonces el resultado obtenido en el estudio no es muy fiable ya que no es un valor muy elevado.
 
-Aun así, debido al aumento de habitaciones respecto a los baños, podemos deducir que cuantos ms baños/habitaciones haya, más metros cuadrados tiene la propiedad. Con esto, y habiendo visto anteriormente que la variable del precio aumenta según sube la cantidad de baños, podemos relacionar que también el precio aumenta según el tamaño del área de la propiedad. Además, de que cuantas más habitaciones, mayor es el precio. Esto significa que, gracias al haber visto anteriormente comparando las variables de las habitaciones con las del número de camas, cuantas ms personas se puedan alojar, mayor será el precio de la propiedad.
+Aun así, debido al aumento de habitaciones respecto a los baños, podemos deducir que cuantos más baños/habitaciones haya, más grande será la propiedad. Con esto, y habiendo visto anteriormente que la variable del precio aumenta según sube la cantidad de habitaciones, podemos deducir por lógica que el precio también aumenta según el tamaño de la propiedad. Esto significa que, gracias a haber comparado anteriormente las habitaciones y el número de camas, cuantas más personas se puedan alojar, mayor será el precio de la propiedad.
 
 #### Estudio de las variables price y city
 
@@ -962,26 +968,14 @@ Airbnb_Data |> filter(log_price < 500) |>
 
 Podemos ver con más claridad como los precios más caros nos los encontramos en San Francisco y los más baratos en Los Ángeles y Chicago.
 
-#### Estudio de las variables reseñas y precio
-
-```{r}
-Airbnb_Data |>
-    ggplot(aes(x = review_scores_rating, y = log_price)) +
-    geom_point() + 
-    geom_smooth(method = lm) +
-    labs(title = "Gráfico de dispersión con ajuste de regresión")
-```
-
-De manera general, se puede observar que las reseñas con mejor puntaje tienden a acumularse en las opciones más económicas. Este cúmulo se percibe mejor como el area bajo la curva que forman los puntos.
-
 ## Conclusión
 
 Tras el análisis de los datos, hemos llegado a las siguientes conclusiones:
 
-El objetivo principal de este estudio era analizar cómo varía el precio de las ofertas de Airbnb según las diferentes variables del conjunto de datos. Sin embargo, concluimos que la mayoría de las variables que podrían haber sido relevantes presentan un coeficiente de correlación lineal cercano a cero, lo que dificulta su análisis y limita la obtención de resultados significativos.
+El objetivo principal de este estudio era analizar cómo varía el precio de las ofertas de Airbnb según las diferentes variables del conjunto de datos. Sin embargo, concluimos que la mayoría de las variables que podrían haber sido relevantes, presentan un coeficiente de correlación lineal bajo, lo que dificulta su análisis y limita la obtención de resultados significativos.
 
 En el análisis univariante, se descartaron algunas variables debido a su escasa relevancia o la falta de información suficiente en ellas. Además, para el análisis bivariante, el tipo de propiedad quizás hubiera influenciado en el precio, no obstante, después de analizar la variable de forma univariante, concluimos que para que el bajo número de diferentes propiedades a parte de las 2 principales, no sería de gran relevancia para el análisis.
 
-A pesar de ello, se identificaron varias variables con una buena correlación lineal entre sí. La relación más notable fue entre las variables price y review_score_rating, donde se observó que las calificaciones de las reseñas dependen más del precio que viceversa. También se pudo concluir que, efectivamente, el precio aumenta según aumenta la gente que pueda alojarse en la propiedad y según aumentan los metros cuadrados de la misma, teniéndolo muy en cuenta a la hora de reservar en esta plataforma.
+A pesar de ello, se identificaron varias variables con una buena correlación lineal entre sí. Se pudo concluir que, efectivamente, el precio aumenta según aumenta la gente que pueda alojarse en la propiedad y según aumenta el tamaño de la misma, cosa que parece ser importante a la hora de reservar en esta plataforma.
 
-Cabe comentar que el estudio se ha visto ligeramente afectado negativamente debido la presencia de un algunos datos atípicos, lo que ha impactado en la calidad de los resultados obtenidos, pero que aun así se han logrado obtener unas respuestas válidas para el estudio.
+Cabe destacar que el estudio se ha visto ligeramente afectado negativamente debido a que, al haber tantas respuestas, hay una gran variedad en los datos, lo que ha impactado en la calidad de los resultados obtenidos, pero que aun así se han logrado obtener unas conclusiones válidas para el estudio.
