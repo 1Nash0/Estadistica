@@ -801,12 +801,21 @@ Para llevar a cabo este estudio, primero realizamos dos tablas de contingencia, 
 TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE RELATIVA
 
 ```{r}
-kable(prop.table(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms)), digits = 6)
-```
+# Genera histogramas para las variables 'ph' y 'est' sin mostrar los gráficos, para determinar los intervalos de clase
+histo <- hist(Airbnb_Data$log_price, plot = FALSE)
+histo2 <- hist(Airbnb_Data$bedrooms, plot = FALSE, breaks = 4)
+# Clasifica las variables 'ph' y 'est' en categorías basadas en los intervalos anteriores y añade estas categorías al dataframe
+Airbnb_Data <- Airbnb_Data |> 
+  mutate(clase_price = cut(log_price, breaks = histo$breaks)) |> 
+  mutate(clase_bedrooms = cut(bedrooms, breaks = histo2$breaks))
+# Ajusta manualmente los niveles de la variable 'clase_ph' para incluir un intervalo específico
+levels(Airbnb_Data$clase_price) <- c(levels(Airbnb_Data$clase_bedrooms))
 
-TABLA DE CONTINGENCIA ENTRE LAS VARIABLES BEDROOMS Y PRICE ABSOLUTA
+# Crea una tabla de contingencia entre las categorías de 'ph' y 'est', añadiendo totales con addmargins(), y la muestra
+tabla <- table(Airbnb_Data$clase_price, Airbnb_Data$clase_bedrooms) |> addmargins()
+tabla |> kable()
 
-```{r}
+
 kable(table(Airbnb_Data$log_price, Airbnb_Data$bedrooms))
 ```
 
